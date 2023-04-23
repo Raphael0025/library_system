@@ -6,28 +6,25 @@ import java.awt.geom.*;
 @SuppressWarnings("serial")
 public class CustomTextField extends JTextField{
 	private Shape shape;
-	public CustomTextField(int size, String ph) {
+	private int arc;
+	public CustomTextField(int size, String ph, int arc) {
 		super(size);
 		setOpaque(false);
 		this.setBackground(null);
 		setText(ph);
 		placeHolder(this, ph);
+		this.arc = arc;
 	}
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.white);
-		g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+		g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, arc, arc);
 		super.paintComponent(g);
 	}
 	protected void paintBorder(Graphics g) {
 		g.setColor(getForeground());
-		g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+		g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, arc, arc);
 	}
-	public boolean contains(int x, int y) {
-		if(shape == null || !shape.getBounds().equals(getBounds())) {
-			shape = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight() -1, 15, 15);
-		}
-		return shape.contains(x, y);
-	}
+	
 	public void placeHolder(JTextField obj, String ph) {
 		String temp = ph;
 		obj.addFocusListener(new FocusListener() {

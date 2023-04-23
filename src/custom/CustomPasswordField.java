@@ -6,22 +6,25 @@ import java.awt.geom.*;
 @SuppressWarnings("serial")
 public class CustomPasswordField extends JPasswordField{
 	private Shape shape;
-	public CustomPasswordField(int size, String ph) {
+	private int arc;
+	
+	public CustomPasswordField(int size, String ph, int arc) {
 		super(size);
 		setOpaque(false);
 		setEchoChar((char)0);
 		setText(ph);
 		placeHolder(this, ph);
 		this.setBackground(null);
+		this.arc = arc;
 	}
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.white);
-		g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+		g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, arc, arc);
 		super.paintComponent(g);
 	}
 	protected void paintBorder(Graphics g) {
 		g.setColor(getForeground());
-		g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+		g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, arc, arc);
 	}
 	public boolean contains(int x, int y) {
 		if(shape == null || !shape.getBounds().equals(getBounds())) {

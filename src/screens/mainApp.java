@@ -7,14 +7,17 @@ import custom.*;
 public class mainApp extends MyFrame{
 
 	JPanel login;
+	static String name = "Library Management";
 	
 	public mainApp() {
-		super("Library Management", 500, 650);
+		super(name, 500, 650);
 		init();
 	}
 	
 	public void init() {
 		login = new login(getWidth(), getHeight());
+		this.setBackground(Color.cyan);
+		this.add(login);
 	}
 
 }

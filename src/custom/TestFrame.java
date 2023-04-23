@@ -19,8 +19,8 @@ public class TestFrame extends JFrame implements ActionListener, MouseListener{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		
-		ctf = new CustomTextField(20, "Username");
-		cpf = new CustomPasswordField(20, "Password");
+		ctf = new CustomTextField(20, "Username", 0);
+		cpf = new CustomPasswordField(20, "Password", 0);
 		ac = new AguaComponents(); 
 		ac.setBounds(10, 50, 150, 50, 20);
 		ac.setColor(100, 140, 230, 100);
