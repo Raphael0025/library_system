@@ -47,9 +47,6 @@ public class login extends AguaComponents{
 		((RoundedButton)member).setArc(0);
 		member.setFont(new Font("Open Sans", 1, 24));
 		
-		staff.addActionListener(this);
-		member.addActionListener(this);
-		
 		((CustomTextField)tf).setBounds(90, 225, 310, 40);
 		tf.setHorizontalAlignment(SwingConstants.CENTER);
 		tf.setFont(new Font("Open Sans", 1, 18));
@@ -76,19 +73,6 @@ public class login extends AguaComponents{
 		this.add(pf);
 		this.add(loginBtn);
 		this.add(ac);
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == member) {
-			changeDefault(member, staff);
-			tf.setText("Enter Member ID");
-			admin = false;
-		} else {
-			changeDefault(staff, member);
-			tf.setText("Enter Staff ID");
-			admin = true;
-		}
 	}
 	
 	public void changeDefault(JButton var, JButton var2) {

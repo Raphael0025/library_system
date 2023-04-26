@@ -1,10 +1,9 @@
 package screens;
 
 import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 import custom.*;
+
 @SuppressWarnings("serial")
 public class sideBar extends AguaComponents{
 	public JLabel logo = new JLabel(new ImageIcon("src\\assets\\uep_logo.png"));
@@ -41,14 +40,9 @@ public class sideBar extends AguaComponents{
 		issued.setPreferredSize(new Dimension(130, 50));
 		
 		active(dash, "dash");
-		hover(member, "members");
-		hover(books, "shelf");
-		hover(issued, "book");
-		
-		dash.addActionListener(this);
-		member.addActionListener(this);
-		books.addActionListener(this);
-		issued.addActionListener(this);
+		Default(member, "members");
+		Default(books, "shelf");
+		Default(issued, "book");
 		
 		menu.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
 		menu.setOpaque(false);
@@ -60,26 +54,17 @@ public class sideBar extends AguaComponents{
 		menu.add(issued);
 	}
 	
-	public void hover(JButton var, String img) {
-		((RoundedButton)var).setFill(233, 62, 62, 255, 255, 255);
-		((RoundedButton)var).setBorder(233, 62, 62, 255, 255, 255);
-		((RoundedButton)var).setFore(255, 255, 255, 233, 62, 62);
-		var.addMouseListener((MouseListener) new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				var.setIcon(new ImageIcon("src\\assets\\red-"+img+".png"));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				var.setIcon(new ImageIcon("src\\assets\\white-"+img+".png"));
-			}
-		});
-	}
-	
 	public void active(JButton var, String img) {
 		((RoundedButton)var).setFill(255, 255, 255, 255, 255, 255);
 		((RoundedButton)var).setBorder(255, 255, 255, 255, 255, 255);
 		((RoundedButton)var).setFore(233, 62, 62, 233, 62, 62);
 		var.setIcon(new ImageIcon("src\\assets\\red-"+img+".png"));
+	}
+	
+	public void Default(JButton var, String img) {
+		((RoundedButton)var).setFill(233, 62, 62, 219,105,108);
+		((RoundedButton)var).setBorder(233, 62, 62, 219,105,108);
+		((RoundedButton)var).setFore(255, 255, 255, 255, 255, 255);
+		var.setIcon(new ImageIcon("src\\assets\\white-"+img+".png"));
 	}
 }

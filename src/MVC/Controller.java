@@ -1,6 +1,5 @@
 package MVC;
-import java.awt.Color;
-import java.awt.Cursor;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import custom.*; 
@@ -21,7 +20,12 @@ public class Controller extends MyClass{
 		this.tb = tBar;
 		this.sb = sb;
 		lp.loginBtn.addActionListener(this);
-		
+		sb.dash.addActionListener(this);
+		sb.member.addActionListener(this);
+		sb.books.addActionListener(this);
+		sb.issued.addActionListener(this);
+		lp.member.addActionListener(this);
+		lp.staff.addActionListener(this);
 	}
 	
 	@Override
@@ -45,13 +49,45 @@ public class Controller extends MyClass{
 				}
 				
 				break;
-			case "Dashboard":
-				JOptionPane.showMessageDialog(null, "Dashboard, this is!\n-Yoda");
+			case "STAFF":
+				lp.changeDefault(lp.staff, lp.member);
+				lp.tf.setText("Enter Staff ID");
+				lp.admin = true;
+				break;
+			case "MEMBER":
+				lp.changeDefault(lp.member, lp.staff);
+				lp.tf.setText("Enter Member ID");
+				lp.admin = false;
+				break;
+			case "DASHBOARD":
+				sb.active(sb.dash, "dash");
+				sb.Default(sb.member, "members");
+				sb.Default(sb.books, "shelf");
+				sb.Default(sb.issued, "book");
+				
+				break;
+			case "MEMBERS":
+				sb.Default(sb.dash, "dash");
+				sb.active(sb.member, "members");
+				sb.Default(sb.books, "shelf");
+				sb.Default(sb.issued, "book");
+				
+				break;
+			case "BOOK SHELF":
+				sb.Default(sb.dash, "dash");
+				sb.Default(sb.member, "members");
+				sb.active(sb.books, "shelf");
+				sb.Default(sb.issued, "book");
+				
+				break;
+			case "ISSUED":
+				sb.active(sb.issued, "book");
+				sb.Default(sb.member, "members");
+				sb.Default(sb.books, "shelf");
+				sb.Default(sb.dash, "dash");
+				
 				break;
 		}
 	}
 	
-	public void verfication() {
-		
-	}
 }
