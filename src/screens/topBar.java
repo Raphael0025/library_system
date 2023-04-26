@@ -14,7 +14,7 @@ public class topBar extends AguaComponents{
 		name.setForeground(Color.white);
 		
 		setVisible(false);
-		setBounds(0,0,1285,60,0);
+		setBounds(130,0,1155,60,0);
 		setLayout(new FlowLayout(FlowLayout.TRAILING));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 30));
 		setColor(233, 62, 62, 255);

@@ -9,7 +9,7 @@ import java.awt.event.*;
 @SuppressWarnings("serial")
 public class mainApp extends MyFrame{
 	JLabel out = new JLabel("LOGOUT");
-	JPanel log, dashboard, tB;
+	JPanel log, dashboard, tB, sb;
 	static String name = "Library Management";
 	public JPanel dropdown = new JPanel();
 	
@@ -21,11 +21,12 @@ public class mainApp extends MyFrame{
 	public void init() {
 		log = new login(getWidth(), getHeight());
 		dashboard = new Dashboard();
+		sb = new sideBar();
 		tB = new topBar();
 		
 		this.setBackground(Color.cyan);
 		
-		new Controller(this, ((login)log), ((Dashboard)dashboard), ((topBar)tB));
+		new Controller(this, ((login)log), ((Dashboard)dashboard), ((topBar)tB), ((sideBar)sb));
 		dropdown.setBackground(new Color(221, 221, 221));
 		dropdown.setBounds(1090, 60, 190, 50);
 		dropdown.setVisible(false);
@@ -67,6 +68,7 @@ public class mainApp extends MyFrame{
 		this.add(dropdown);
 		this.add(dashboard);
 		this.add(tB);
+		this.add(sb);
 		this.add(log);
 	}
 
@@ -78,5 +80,6 @@ public class mainApp extends MyFrame{
 		dashboard.setVisible(false);
 		dropdown.setVisible(false);
 		tB.setVisible(false);
+		sb.setVisible(false);
 	}
 }

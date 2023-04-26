@@ -12,12 +12,14 @@ public class Controller extends MyClass{
 	login lp;
 	Dashboard dash;
 	topBar tb;
+	sideBar sb;
 	
-	public Controller(mainApp mp, login lp, Dashboard dash, topBar tBar){
+	public Controller(mainApp mp, login lp, Dashboard dash, topBar tBar, sideBar sb){
 		this.mp = mp;
 		this.lp = lp;
 		this.dash = dash;
 		this.tb = tBar;
+		this.sb = sb;
 		lp.loginBtn.addActionListener(this);
 		
 	}
@@ -35,6 +37,7 @@ public class Controller extends MyClass{
 				lp.setVisible(false);
 				dash.setVisible(true);
 				tb.setVisible(true);
+				sb.setVisible(true);
 				if(lp.admin) {
 					tb.Title("ADMIN");
 				} else {
