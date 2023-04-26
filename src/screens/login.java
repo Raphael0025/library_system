@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import custom.*;
-
+@SuppressWarnings("serial")
 public class login extends AguaComponents{
 	public JButton staff = new RoundedButton("STAFF");
 	public JButton member = new RoundedButton("MEMBER");
@@ -15,7 +15,7 @@ public class login extends AguaComponents{
 	public JTextField tf = new CustomTextField(20, "Enter Member ID", 20);
 	public JPasswordField pf = new CustomPasswordField(20, "Enter Password", 20);
 	public AguaComponents ac;
-	
+	public boolean admin = false;
 	
 	public login() {
 		this.setLayout(null);
@@ -81,26 +81,24 @@ public class login extends AguaComponents{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == member) {
-			change(staff);
-			changeDefault(member);
+			changeDefault(member, staff);
 			tf.setText("Enter Member ID");
+			admin = false;
 		} else {
-			change(member);
-			changeDefault(staff);
+			changeDefault(staff, member);
 			tf.setText("Enter Staff ID");
+			admin = true;
 		}
-		repaint();
 	}
 	
-	public void changeDefault(JButton var) {
+	public void changeDefault(JButton var, JButton var2) {
 		((RoundedButton)var).setFill(233, 62, 62, 233, 62, 62);
 		((RoundedButton)var).setBorder(233, 62, 62, 233, 62, 62);
 		((RoundedButton)var).setFore(255, 255, 255, 255, 255, 255);
-	}
-	
-	public void change(JButton var) {
-		((RoundedButton)var).setFill(255, 255, 255, 255, 255, 255);
-		((RoundedButton)var).setBorder(255, 255, 255, 255, 255, 255);
-		((RoundedButton)var).setFore(255, 0, 0, 255, 0, 0);
+		
+		((RoundedButton)var2).setFill(255, 255, 255, 255, 255, 255);
+		((RoundedButton)var2).setBorder(255, 255, 255, 255, 255, 255);
+		((RoundedButton)var2).setFore(255, 0, 0, 255, 0, 0);
+		repaint();
 	}
 }

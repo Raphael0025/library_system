@@ -2,10 +2,10 @@ package custom;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
+//import java.awt.geom.*;
 @SuppressWarnings("serial")
 public class CustomTextField extends JTextField{
-	private Shape shape;
+	//private Shape shape;
 	private int arc;
 	public CustomTextField(int size, String ph, int arc) {
 		super(size);
