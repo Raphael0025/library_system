@@ -2,6 +2,7 @@ package MVC;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import components.*;
 import custom.*; 
 import screens.*;
 
@@ -9,14 +10,15 @@ import screens.*;
 public class Controller extends MyClass{
 	mainApp mp;
 	login lp;
-	Dashboard dash;
+	Dashboard dashB;
 	topBar tb;
 	sideBar sb;
+	public String[] arr;
 	
 	public Controller(mainApp mp, login lp, Dashboard dash, topBar tBar, sideBar sb){
 		this.mp = mp;
 		this.lp = lp;
-		this.dash = dash;
+		this.dashB = dash;
 		this.tb = tBar;
 		this.sb = sb;
 		lp.loginBtn.addActionListener(this);
@@ -26,6 +28,10 @@ public class Controller extends MyClass{
 		sb.issued.addActionListener(this);
 		lp.member.addActionListener(this);
 		lp.staff.addActionListener(this);
+		
+		int len = dashB.def.length;
+		arr = new String[len];
+		arr = dashB.def;
 	}
 	
 	@Override
@@ -39,11 +45,14 @@ public class Controller extends MyClass{
 				mp.setLocationRelativeTo(null);
 				mp.setTitle("Library Management - Dashboard");
 				lp.setVisible(false);
-				dash.setVisible(true);
+				dashB.setVisible(true);
 				tb.setVisible(true);
 				sb.setVisible(true);
 				if(lp.admin) {
 					tb.Title("ADMIN");
+					for(int i = 0; i < 6; i++) {
+						dashB.setContent(i, arr[i]);
+					}
 				} else {
 					tb.Title("MEMBER");
 				}
@@ -64,6 +73,11 @@ public class Controller extends MyClass{
 				sb.Default(sb.member, "members");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
+				
+				for(int i = 0; i < 6; i++) {
+					//dashB.setVal(i, def[i]);
+					
+				}
 				
 				break;
 			case "MEMBERS":

@@ -7,15 +7,16 @@ import components.*;
 @SuppressWarnings("serial")
 public class Dashboard extends AguaComponents{
 	
-	JLabel title = new JLabel("DASHBOARD");
-	GridLayout lay = new GridLayout(2, 3);
-	JPanel pane = new JPanel(lay);
-	JPanel ditm;
-	
+	public JLabel title = new JLabel("DASHBOARD");
+	public GridLayout lay = new GridLayout(2, 3);
+	public JPanel pane = new JPanel(lay);
+	public JPanel[] ditm = new JPanel[6];
 	public Dashboard() {
 		init();
 	}
-	
+	public String[] headers = {"Total Books", "Issued Books", "Returned Books", "Late Returns", "No. of Students", "No. of Teachers"}; 
+	public String[] icons = {"books", "open-books", "carry-books", "opened-book", "student", "teacher"};
+	public String[] def = {"1,150", "25", "50", "20", "2,050", "10"};
 	public void init() {
 		setLayout(null);
 		setVisible(false);
@@ -33,14 +34,15 @@ public class Dashboard extends AguaComponents{
 		pane.setOpaque(false);
 		pane.setBorder(BorderFactory.createEmptyBorder(30, 60, 30, 60));
 		
-		pane.add(ditm = new dash_item("Total Books", "1, 150", "books"));
-		pane.add(ditm = new dash_item("Issued Books", "25", "open-books"));
-		pane.add(ditm = new dash_item("Returned Books", "50", "carry-books"));
-		pane.add(ditm = new dash_item("Late Returns", "20", "opened-book"));
-		pane.add(ditm = new dash_item("No. of Students", "2, 050", "student"));
-		pane.add(ditm = new dash_item("No. of Teachers", "10", "teacher"));
+		for(int i = 0; i < 6; i++) {
+			pane.add(ditm[i] = new dash_item(headers[i], icons[i]));
+		}
 		
 		this.add(title);
 		this.add(pane);
+	}
+	
+	public void setContent(int inx, String value) {
+		((dash_item)ditm[inx]).setVal(value);
 	}
 }
