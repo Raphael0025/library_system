@@ -16,8 +16,9 @@ public class Controller extends MyClass{
 	memberList member_list;
 	issuedBook ib;
 	bookShelf bs;
-	promptFrame pf = new promptFrame();
+	promptFrame pf;
 	M_RUD mr;
+	NewMemberRecord nmr;
 	
 	public String[] arr;
 	
@@ -41,6 +42,7 @@ public class Controller extends MyClass{
 		mp.out.addMouseListener(this);
 		tb.arrow.addMouseListener(this);
 		member_list.query.addActionListener(this);
+		member_list.addMember.addActionListener(this);
 		
 		int len = dashB.def.length;
 		arr = new String[len];
@@ -121,11 +123,21 @@ public class Controller extends MyClass{
 				
 				break;
 			case "Search Member":
-				pf = new promptFrame();
+				pf = new promptFrame("Search Member", 700, 720);
 				pf.setVisible(true);
 				mr = new M_RUD(pf.getWidth(), pf.getHeight());
 				mr.edit.addActionListener(this);
 				pf.add(mr);
+				break;
+				
+			case "Add New Member":
+				pf = new promptFrame("Create New Record", 550, 550);
+				pf.setVisible(true);
+				nmr = new NewMemberRecord(pf.getWidth(), pf.getHeight());
+				nmr.create.addMouseListener(this);
+				//nmr.edit.addActionListener(this);
+				
+				pf.add(nmr);
 				break;
 		}
 	}
@@ -150,6 +162,8 @@ public class Controller extends MyClass{
 			tb.arrow.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		} else if (e.getSource() == mp.out) {
 			mp.out.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		} else if(e.getSource() == nmr.create) {
+			nmr.create.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
 		}
 	}
 	
@@ -159,6 +173,8 @@ public class Controller extends MyClass{
 			tb.arrow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else if (e.getSource() == mp.out) {
 			mp.out.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}else if(e.getSource() == nmr.create) {
+			nmr.create.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
 		}
 	}
 	

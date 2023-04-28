@@ -49,6 +49,7 @@ public class M_RUD extends AguaComponents{
 		((RoundedButton)del).setArc(20);
 		Default(del, "del");
 		del.setFont(new Font("Open Sans", 1, 20));
+		
 		int y = 130;
 		for(int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel(txt[i].concat(":"));

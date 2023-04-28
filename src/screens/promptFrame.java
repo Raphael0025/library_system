@@ -9,7 +9,6 @@ import custom.*;
 @SuppressWarnings("serial")
 public class promptFrame extends MyFrame{
 	
-	static String name ="prompt";
 	//Membership
 	public JPanel mrud;
 	
@@ -22,8 +21,8 @@ public class promptFrame extends MyFrame{
 	
 	
 	// put width and height
-	public promptFrame() {
-		super(name, 700, 720);
+	public promptFrame(String name, int w, int h) {
+		super(name, w, h);
 		this.setVisible(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         

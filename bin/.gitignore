@@ -1,5 +1,8 @@
 /module-info.class
+/.gitignore
+/.project
 /MVC/
+/assets/
 /components/
 /custom/
 /screens/
