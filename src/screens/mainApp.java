@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 import MVC.Controller;
 import custom.*;
-import java.awt.event.*;
 
 @SuppressWarnings("serial")
 public class mainApp extends MyFrame{

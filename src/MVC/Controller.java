@@ -16,6 +16,8 @@ public class Controller extends MyClass{
 	memberList member_list;
 	issuedBook ib;
 	bookShelf bs;
+	promptFrame pf = new promptFrame();
+	M_RUD mr;
 	
 	public String[] arr;
 	
@@ -38,6 +40,7 @@ public class Controller extends MyClass{
 		lp.staff.addActionListener(this);
 		mp.out.addMouseListener(this);
 		tb.arrow.addMouseListener(this);
+		member_list.query.addActionListener(this);
 		
 		int len = dashB.def.length;
 		arr = new String[len];
@@ -116,6 +119,13 @@ public class Controller extends MyClass{
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.dash, "dash");
 				
+				break;
+			case "Search Member":
+				pf = new promptFrame();
+				pf.setVisible(true);
+				mr = new M_RUD(pf.getWidth(), pf.getHeight());
+				mr.edit.addActionListener(this);
+				pf.add(mr);
 				break;
 		}
 	}
