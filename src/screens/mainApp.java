@@ -8,7 +8,7 @@ import custom.*;
 @SuppressWarnings("serial")
 public class mainApp extends MyFrame{
 	public JLabel out = new JLabel("LOGOUT");
-	public JPanel log, dashboard, tB, sb, membership, issuedBooks, bookShelf;
+	public JPanel log, dashboard, tB, sb, membership, ib, bs;
 	static String name = "Library Management";
 	public JPanel dropdown = new JPanel();
 	
@@ -23,9 +23,10 @@ public class mainApp extends MyFrame{
 		sb = new sideBar();
 		tB = new topBar();
 		membership = new memberList();
+		bs = new bookShelf(); 
+		ib = new issuedBook();
 		
-		
-		new Controller(this, ((login)log), ((Dashboard)dashboard), ((topBar)tB), ((sideBar)sb), ((memberList)membership));
+		new Controller(this, ((login)log), ((Dashboard)dashboard), ((topBar)tB), ((sideBar)sb), ((memberList)membership), ((bookShelf)bs), ((issuedBook)ib));
 		dropdown.setBackground(new Color(221, 221, 221));
 		dropdown.setBounds(1090, 60, 190, 50);
 		dropdown.setVisible(false);
@@ -33,9 +34,12 @@ public class mainApp extends MyFrame{
 		out.setFont(new Font("Open Sans", 1, 18));
 		out.setForeground(new Color(202, 2, 4));
 		dropdown.add(out);
-		this.add(dropdown);
-		this.add(membership);
 		
+		this.add(dropdown);
+		
+		this.add(membership);
+		this.add(ib);
+		this.add(bs);
 		this.add(dashboard);
 		this.add(tB);
 		this.add(sb);

@@ -2,7 +2,6 @@ package MVC;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import components.*;
 import custom.*; 
 import screens.*;
 
@@ -13,24 +12,28 @@ public class Controller extends MyClass{
 	Dashboard dashB;
 	topBar tb;
 	sideBar sb;
-	memberList member_list;
+	memberList m_list;
 	issuedBook ib;
 	bookShelf bs;
 	promptFrame pf;
 	M_RUD mr;
 	NewMemberRecord nmr;
+	NewBookRecord nbr;
+	B_RUD brud;
+	BookRent br;
+	ViewIssuedBook vib;
 	
 	public String[] arr;
 	
-	public Controller(mainApp mp, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList){
+	public Controller(mainApp mp, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList, bookShelf bs, issuedBook ib){
 		this.mp = mp;
 		this.lp = lp;
 		this.dashB = dash;
 		this.tb = tBar;
 		this.sb = sb;
-		this.member_list = mbList;
-//		this.bs = bookS;
-//		this.ib = issued;
+		this.m_list = mbList;
+		this.bs = bs;
+		this.ib = ib;
 		
 		lp.loginBtn.addActionListener(this);
 		sb.dash.addActionListener(this);
@@ -41,8 +44,11 @@ public class Controller extends MyClass{
 		lp.staff.addActionListener(this);
 		mp.out.addMouseListener(this);
 		tb.arrow.addMouseListener(this);
-		member_list.query.addActionListener(this);
-		member_list.addMember.addActionListener(this);
+		m_list.query.addActionListener(this);
+		m_list.addMember.addActionListener(this);
+		bs.addB.addActionListener(this);
+		bs.query.addActionListener(this);
+		ib.query.addActionListener(this);
 		
 		int len = dashB.def.length;
 		arr = new String[len];
@@ -90,8 +96,10 @@ public class Controller extends MyClass{
 				sb.Default(sb.member, "members");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
-				member_list.setVisible(false);
 				dashB.setVisible(true);
+				m_list.setVisible(false);
+				bs.setVisible(false);
+				ib.setVisible(false);
 				
 				for(int i = 0; i < 6; i++) {
 					//dashB.setVal(i, def[i]);
@@ -104,8 +112,11 @@ public class Controller extends MyClass{
 				sb.active(sb.member, "members");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
-				member_list.setVisible(true);
+				m_list.setVisible(true);
 				dashB.setVisible(false);
+				bs.setVisible(false);
+				ib.setVisible(false);
+				m_list.search.setText("Search");
 				
 				break;
 			case "BOOK SHELF":
@@ -113,6 +124,11 @@ public class Controller extends MyClass{
 				sb.Default(sb.member, "members");
 				sb.active(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
+				bs.setVisible(true);
+				dashB.setVisible(false);
+				m_list.setVisible(false);
+				ib.setVisible(false);
+				bs.search.setText("Search");
 				
 				break;
 			case "ISSUED":
@@ -120,6 +136,11 @@ public class Controller extends MyClass{
 				sb.Default(sb.member, "members");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.dash, "dash");
+				ib.setVisible(true);
+				dashB.setVisible(false);
+				m_list.setVisible(false);
+				bs.setVisible(false);
+				ib.search.setText("Search");
 				
 				break;
 			case "Search Member":
@@ -128,16 +149,126 @@ public class Controller extends MyClass{
 				mr = new M_RUD(pf.getWidth(), pf.getHeight());
 				mr.edit.addActionListener(this);
 				pf.add(mr);
+				
+				break;
+			case "Issue this Book":
+				pf.dispose();
+				pf = new promptFrame("Book Rent", 600, 480);
+				pf.setVisible(true);
+				br = new BookRent(pf.getWidth(), pf.getHeight());
+				//br.edit.addActionListener(this);
+				pf.add(br);
+				
+				br.issB.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						br.issB.setIcon(new ImageIcon("src\\assets\\red-openbook.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						br.issB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
+					}
+				});
+				
+				break;
+			case "Search Book":
+				pf = new promptFrame("Search Book", 600, 480);
+				pf.setVisible(true);
+				brud = new B_RUD(pf.getWidth(), pf.getHeight());
+				//brud.edit.addActionListener(this);
+				pf.add(brud);
+				brud.editB.addActionListener(this);
+				brud.issueB.addActionListener(this);
+				
+				brud.editB.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						brud.editB.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						brud.editB.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
+					}
+				});
+				
+				brud.issueB.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						brud.issueB.setIcon(new ImageIcon("src\\assets\\red-openbook.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						brud.issueB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
+					}
+				});
+				
+				brud.delB.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						brud.delB.setIcon(new ImageIcon("src\\assets\\red-del.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						brud.delB.setIcon(new ImageIcon("src\\assets\\white-del.png"));
+					}
+				});
+				
 				break;
 				
 			case "Add New Member":
 				pf = new promptFrame("Create New Record", 550, 550);
 				pf.setVisible(true);
 				nmr = new NewMemberRecord(pf.getWidth(), pf.getHeight());
-				nmr.create.addMouseListener(this);
+				nmr.create.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						nmr.create.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						nmr.create.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
+					}
+				});
 				//nmr.edit.addActionListener(this);
 				
 				pf.add(nmr);
+				break;
+			case "Add New Book":
+				pf = new promptFrame("New Book", 600, 450);
+				pf.setVisible(true);
+				nbr = new NewBookRecord(pf.getWidth(), pf.getHeight());
+				nbr.adb.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						nbr.adb.setIcon(new ImageIcon("src\\assets\\red-book.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						nbr.adb.setIcon(new ImageIcon("src\\assets\\white-book.png"));
+					}
+				});
+				
+				pf.add(nbr);
+				break;
+			case "Edit Book":
+				JOptionPane.showMessageDialog(null, "Oks");
+				break;
+			case "Search Issued Book":
+				pf = new promptFrame("New Book", 600, 520);
+				pf.setVisible(true);
+				vib = new ViewIssuedBook(pf.getWidth(), pf.getHeight());
+				vib.returnB.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						vib.returnB.setIcon(new ImageIcon("src\\assets\\red-book.png"));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						vib.returnB.setIcon(new ImageIcon("src\\assets\\white-book.png"));
+					}
+				});
+				
+				pf.add(vib);
 				break;
 		}
 	}
@@ -162,9 +293,7 @@ public class Controller extends MyClass{
 			tb.arrow.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		} else if (e.getSource() == mp.out) {
 			mp.out.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		} else if(e.getSource() == nmr.create) {
-			nmr.create.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
-		}
+		} 
 	}
 	
 	@Override
@@ -173,8 +302,6 @@ public class Controller extends MyClass{
 			tb.arrow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else if (e.getSource() == mp.out) {
 			mp.out.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		}else if(e.getSource() == nmr.create) {
-			nmr.create.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
 		}
 	}
 	
@@ -183,12 +310,19 @@ public class Controller extends MyClass{
 		mp.setLocationRelativeTo(null);
         mp.setTitle("Library Management");
         lp.setVisible(true);
-		dashB.setVisible(false);
 		mp.dropdown.setVisible(false);
 		tb.setVisible(false);
 		sb.setVisible(false);
+		dashB.setVisible(false);
+		ib.setVisible(false);
+		m_list.setVisible(false);
+		bs.setVisible(false);
 		for(int i = 0; i < 6; i++) {
 			dashB.setContent(i, "");
 		}
+		sb.active(sb.dash, "dash");
+		sb.Default(sb.member, "members");
+		sb.Default(sb.books, "shelf");
+		sb.Default(sb.issued, "book");
 	}
 }

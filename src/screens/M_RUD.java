@@ -3,7 +3,6 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import custom.*;
-import components.*;
 
 @SuppressWarnings("serial")
 public class M_RUD extends AguaComponents{

@@ -4,40 +4,34 @@ import java.awt.*;
 import custom.*;
 
 @SuppressWarnings("serial")
-public class NewMemberRecord extends AguaComponents{
-	static String name = "CREATE NEW RECORD";
+public class BookRent extends AguaComponents{
+
+	static String name = "FILL OUT DETAILS TO ISSUE BOOK";
 	public JLabel header = new JLabel(name);
-	public JButton create = new RoundedButton("CREATE");
-	public JButton gen = new RoundedButton("GENERATE");
-	JLabel[] labels = new JLabel[8];
-	JTextField[] tf = new JTextField[8];
-	String[] txt = {"Name", "Member Type", "Address", "Age", "Contact No.", "Email Address", "Password","Member ID"};
-	   
-	public NewMemberRecord(int w, int h) {
+	public JButton issB = new RoundedButton("Issue Book");
+	JLabel[] labels = new JLabel[7];
+	JTextField[] tf = new JTextField[7];
+	String[] txt = {"Book ID", "Book Title", "Member ID", "Member Name", "Issued Date", "Returned Date", "Late Fine Fee"};
+	
+	public BookRent(int w, int h) {
 		init(w, h);
 	}
-	
 	public void init(int w, int h) {
+		
 		setLayout(null);
 		setBounds(0, 0, w, h, 0);
 		setColor(233,62,62, 255);
 		
 		header.setBounds(30,10,w,50);
-		header.setFont(new Font("Open Sans", 1, 30));
+		header.setFont(new Font("Open Sans", 1, 18));
 		header.setForeground(Color.white);
-		
-		((RoundedButton)create).setBounds(150, 430, 250, 45);
-		((RoundedButton)create).setArc(20);
-		Default(create, "edit");
-		create.setFont(new Font("Open Sans", 1, 20));
-		
-		((RoundedButton)gen).setBounds(370, 340, 110, 30);
-		((RoundedButton)gen).setArc(20);
-		Default(gen, null);
-		gen.setFont(new Font("Open Sans", 1, 12));
-		
 
-		int y = 100;
+		((RoundedButton)issB).setBounds(380, 80, 180, 40);
+		((RoundedButton)issB).setArc(20);
+		Default(issB, "openbook");
+		issB.setFont(new Font("Open Sans", 1, 16));
+		
+		int y = 150;
 		for(int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel(txt[i].concat(":"));
 			labels[i].setBounds(40, y, 150, 30);
@@ -46,30 +40,25 @@ public class NewMemberRecord extends AguaComponents{
 			y+=40;
 		}
 		
-		int y2 = 100;
+		int y2 = 150;
 		for(int i = 0; i < tf.length; i++) {
 			tf[i] = new CustomTextField(20, "", 10);
-			if(i > 5) {
-				((CustomTextField)tf[i]).setBounds(210, y2, 150, 30);
-				((CustomTextField)tf[i]).setEditable(false);
-			} else {
-				((CustomTextField)tf[i]).setBounds(210, y2, 280, 30);
-			}
+			((CustomTextField)tf[i]).setBounds(210, y2, 350, 30);
 			tf[i].setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 			tf[i].setFont(new Font("Open Sans", 1, 14));
 			tf[i].setForeground(new Color(202, 2, 4));
 			y2+=40;
 		}
-		
+
 		for(int i = 0; i < labels.length; i++) {
 			this.add(labels[i]);
 		}
         for(int i = 0; i < tf.length; i++) {
 			this.add(tf[i]);
 		}
-		this.add(header);
-		this.add(create);
-		this.add(gen);
+        
+        this.add(issB);
+        this.add(header);
 	}
 	
 	public void Default(JButton var, String img) {
