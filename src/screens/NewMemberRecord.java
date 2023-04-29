@@ -36,7 +36,6 @@ public class NewMemberRecord extends AguaComponents{
 		Default(gen, null);
 		gen.setFont(new Font("Open Sans", 1, 12));
 		
-
 		int y = 100;
 		for(int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel(txt[i].concat(":"));

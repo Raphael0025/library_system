@@ -5,12 +5,11 @@ import custom.*;
 import javax.swing.table.*;
 
 @SuppressWarnings("serial")
-public class bookShelf extends AguaComponents{
-	
-	public JLabel title = new JLabel("Book List");
-	public JTextField search = new CustomTextField(20, "Search", 20);
-	public JButton query = new RoundedButton("Search Book");
-	public JButton addB = new RoundedButton("Add New Book");
+public class MemberDashboard extends AguaComponents{
+
+	public JLabel title = new JLabel("Show Available Books");
+	public JTextField searchQry = new CustomTextField(20, "Search", 20);
+	public JButton query = new RoundedButton("Search");
 
 	String[] column = {"Book ID","Book Type", "Book Title", "Author", "Published Date", "Availability"};
     DefaultTableModel model = new DefaultTableModel();
@@ -23,21 +22,23 @@ public class bookShelf extends AguaComponents{
     };
     JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
     
-	public bookShelf() {
+	
+	public MemberDashboard() {
 		init();
 	}
 	
 	public void init() {
 		setLayout(null);
 		setVisible(false);
-		setBounds(150, 70, 1120, 630, 20);
+		setBounds(10, 70, 1260, 630, 20);
 		setColor(219,105,108, 255);
 		
+
 		//JTable
         for (String column1 : column) {
             model.addColumn(column1);
         }
-        scrollTable.setBounds(30, 190, 1070, 430);
+        scrollTable.setBounds(30, 190, 1200, 420);
         render.setFont(new Font("Arial", Font.PLAIN, 12));
         render.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         table.getTableHeader().setReorderingAllowed(false);
@@ -49,14 +50,14 @@ public class bookShelf extends AguaComponents{
             table.getColumnModel().getColumn(i).setCellRenderer(render);
         }
         
-        title.setBounds(30,0,250,80);
-		title.setFont(new Font("Open Sans", 1, 36));
+        title.setBounds(30,0,300,80);
+		title.setFont(new Font("Open Sans", 1, 28));
 		title.setForeground(Color.white);
 		
-		((CustomTextField)search).setBounds(25, 140, 380, 40);
-		search.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-		search.setFont(new Font("Open Sans", 1, 18));
-		search.setForeground(new Color(202, 2, 4));
+		((CustomTextField)searchQry).setBounds(25, 140, 380, 40);
+		searchQry.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		searchQry.setFont(new Font("Open Sans", 1, 18));
+		searchQry.setForeground(new Color(202, 2, 4));
 		
 		((RoundedButton)query).setBounds(420, 140, 160, 40);
 		((RoundedButton)query).setFill(233, 62, 62, 255, 255, 255);
@@ -64,18 +65,9 @@ public class bookShelf extends AguaComponents{
 		((RoundedButton)query).setFore(255, 255, 255, 255, 0, 0);
 		query.setFont(new Font("Open Sans", 1, 18));
 		
-		((RoundedButton)addB).setBounds(890, 140, 210, 40);
-		((RoundedButton)addB).setFill(233, 62, 62, 255, 255, 255);
-		((RoundedButton)addB).setBorder(233, 62, 62, 255, 255, 255);
-		((RoundedButton)addB).setFore(255, 255, 255, 255, 0, 0);
-		addB.setFont(new Font("Open Sans", 1, 18));
-		
-		//model.addRow(new Object[]{"1", "2", "3", "4"});
-		
 		this.add(scrollTable);
-		this.add(addB);
 		this.add(query);
-		this.add(search);
+		this.add(searchQry);
 		this.add(title);
 	}
 }

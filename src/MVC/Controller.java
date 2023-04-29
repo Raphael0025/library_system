@@ -22,10 +22,12 @@ public class Controller extends MyClass{
 	B_RUD brud;
 	BookRent br;
 	ViewIssuedBook vib;
+	UserProfile up;
+	MemberDashboard md;
 	
 	public String[] arr;
 	
-	public Controller(mainApp mp, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList, bookShelf bs, issuedBook ib){
+	public Controller(mainApp mp, MemberDashboard memberDash, UserProfile up, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList, bookShelf bs, issuedBook ib){
 		this.mp = mp;
 		this.lp = lp;
 		this.dashB = dash;
@@ -33,7 +35,9 @@ public class Controller extends MyClass{
 		this.sb = sb;
 		this.m_list = mbList;
 		this.bs = bs;
+		this.md = memberDash;
 		this.ib = ib;
+		this.up = up;
 		
 		lp.loginBtn.addActionListener(this);
 		sb.dash.addActionListener(this);
@@ -49,6 +53,7 @@ public class Controller extends MyClass{
 		bs.addB.addActionListener(this);
 		bs.query.addActionListener(this);
 		ib.query.addActionListener(this);
+		tb.name.addMouseListener(this);
 		
 		int len = dashB.def.length;
 		arr = new String[len];
@@ -66,8 +71,6 @@ public class Controller extends MyClass{
 				mp.setLocationRelativeTo(null);
 				lp.setVisible(false);
 				tb.setVisible(true);
-				dashB.setVisible(true);
-				sb.setVisible(true);
 				
 				if(lp.admin) {
 					tb.Title("ADMIN");
@@ -75,9 +78,13 @@ public class Controller extends MyClass{
 					for(int i = 0; i < 6; i++) {
 						dashB.setContent(i, arr[i]);
 					}
+					dashB.setVisible(true);
+					sb.setVisible(true);
 				} else {
 					tb.Title("MEMBER");
 					mp.setTitle("Library Management - Dashboard(MEMBER)");
+					md.setVisible(true);
+					tb.home.setVisible(true);
 				}
 				
 				break;
@@ -100,6 +107,10 @@ public class Controller extends MyClass{
 				m_list.setVisible(false);
 				bs.setVisible(false);
 				ib.setVisible(false);
+				up.setVisible(false);
+				for(int i = 0; i < up.tf.length; i++) {
+					up.tf[i].setText("");
+				}
 				
 				for(int i = 0; i < 6; i++) {
 					//dashB.setVal(i, def[i]);
@@ -116,7 +127,11 @@ public class Controller extends MyClass{
 				dashB.setVisible(false);
 				bs.setVisible(false);
 				ib.setVisible(false);
+				up.setVisible(false);
 				m_list.search.setText("Search");
+				for(int i = 0; i < up.tf.length; i++) {
+					up.tf[i].setText("");
+				}
 				
 				break;
 			case "BOOK SHELF":
@@ -128,7 +143,11 @@ public class Controller extends MyClass{
 				dashB.setVisible(false);
 				m_list.setVisible(false);
 				ib.setVisible(false);
+				up.setVisible(false);
 				bs.search.setText("Search");
+				for(int i = 0; i < up.tf.length; i++) {
+					up.tf[i].setText("");
+				}
 				
 				break;
 			case "ISSUED":
@@ -141,6 +160,10 @@ public class Controller extends MyClass{
 				m_list.setVisible(false);
 				bs.setVisible(false);
 				ib.search.setText("Search");
+				up.setVisible(false);
+				for(int i = 0; i < up.tf.length; i++) {
+					up.tf[i].setText("");
+				}
 				
 				break;
 			case "Search Member":
@@ -283,7 +306,23 @@ public class Controller extends MyClass{
 			}
 		} else if (e.getSource() == mp.out) {
 			 logout();
-		}
+		} else if (e.getSource() ==  tb.name) {
+			mp.setTitle("Library Management - User Profile");
+			sb.Default(sb.issued, "book");
+			sb.Default(sb.member, "members");
+			sb.Default(sb.books, "shelf");
+			sb.Default(sb.dash, "dash");
+			up.setVisible(true);
+			ib.setVisible(false);
+			md.setVisible(false);
+			dashB.setVisible(false);
+			m_list.setVisible(false);
+			bs.setVisible(false);
+		} 
+//		else if (e.getSource() == tb.home) {
+//			md.setVisible(true);
+//			up.setVisible(false);
+//		}
 	
 	}
 	
@@ -293,7 +332,9 @@ public class Controller extends MyClass{
 			tb.arrow.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		} else if (e.getSource() == mp.out) {
 			mp.out.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		} 
+		} else if(e.getSource() == tb.name) {
+			tb.name.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		}
 	}
 	
 	@Override
@@ -302,6 +343,8 @@ public class Controller extends MyClass{
 			tb.arrow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else if (e.getSource() == mp.out) {
 			mp.out.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		} else if(e.getSource() == tb.name) {
+			tb.name.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 	
@@ -309,13 +352,16 @@ public class Controller extends MyClass{
 		mp.setSize(500, 650);
 		mp.setLocationRelativeTo(null);
         mp.setTitle("Library Management");
+        up.setVisible(false);
         lp.setVisible(true);
 		mp.dropdown.setVisible(false);
 		tb.setVisible(false);
 		sb.setVisible(false);
 		dashB.setVisible(false);
 		ib.setVisible(false);
+		md.setVisible(false);
 		m_list.setVisible(false);
+		tb.home.setVisible(false);
 		bs.setVisible(false);
 		for(int i = 0; i < 6; i++) {
 			dashB.setContent(i, "");
