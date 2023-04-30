@@ -16,9 +16,9 @@ public class UserProfile extends AguaComponents{
 	public JTextField[] tf = new JTextField[txt.length];
 
 	String[] column = {"Book ID","Book Type", "Book Title", "Author", "Published Date", "Availability"};
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel modelUP = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
-    JTable table = new JTable(model){
+    JTable table = new JTable(modelUP){
         @Override
         public boolean editCellAt(int row, int col, java.util.EventObject e){
             return false;
@@ -38,7 +38,7 @@ public class UserProfile extends AguaComponents{
 		
 		//JTable
         for (String column1 : column) {
-            model.addColumn(column1);
+        	modelUP.addColumn(column1);
         }
         scrollTable.setBounds(520, 50, 720, 550);
         render.setFont(new Font("Arial", Font.PLAIN, 12));

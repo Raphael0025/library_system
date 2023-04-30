@@ -20,21 +20,6 @@ public class topBar extends AguaComponents{
 		home.setFont(new Font("Open Sans", 1, 12));
 		home.setForeground(Color.white);
 		home.setVisible(false);
-//		home.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				home.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//			}
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//				home.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-//			}
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				md.setVisible(true);
-//				up.setVisible(false);
-//			}
-//		});
 		
 		setVisible(false);
 		setBounds(0,0,1285,60,0);

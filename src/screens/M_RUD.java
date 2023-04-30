@@ -16,9 +16,9 @@ public class M_RUD extends AguaComponents{
 
 	String[] column = {"Books Issued","Issued Date", "Returned Date", "Return Status"};
 	String[] txt = {"Member ID", "Name", "Member Type", "Address", "Age", "Contact No.", "Email Address", "Password"};
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel modelInfo = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
-    JTable table = new JTable(model){
+    JTable table = new JTable(modelInfo){
         @Override
         public boolean editCellAt(int row, int col, java.util.EventObject e){
             return false;
@@ -69,7 +69,7 @@ public class M_RUD extends AguaComponents{
 		}
 		//JTable
         for (String column1 : column) {
-            model.addColumn(column1);
+        	modelInfo.addColumn(column1);
         }
         scrollTable.setBounds(30, 470, 620, 200);
         render.setFont(new Font("Arial", Font.PLAIN, 12));
