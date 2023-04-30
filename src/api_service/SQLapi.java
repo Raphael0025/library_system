@@ -9,7 +9,30 @@ public class SQLapi {
     private PreparedStatement ps = null;
     private ResultSet rs = null;
     
-    public void SQLCreate(String tbl, String id, String _2nd, String _3rd, String _4th, String _5th, String _6th, String _7th, String _8th) {
+    public boolean SQLAccount(String tbl, String id, String pass) {
+    	String sql;
+    	boolean val = false;
+    	try {
+	    	if(tbl.equals("employees")) {
+	    		sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `id` LIKE '%").concat(id).concat("%' AND `password` LIKE '%").concat(pass).concat("%';");
+				
+	    	} else {
+	    		sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `id` LIKE '%").concat(id).concat("%' AND `password` LIKE '%").concat(pass).concat("%';");
+				
+	    	}
+	    	con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            
+            val = rs.next();
+            if(val) {
+            	return true;
+            }
+    	} catch(SQLException e) {}
+    	return val;
+    }
+    
+    public void SQLCreate(String tbl, String id, String _2nd, String _3rd, String _4th, String _5th, String _6th, String _7th, String _8th, DefaultTableModel dtm) {
     	String sql;
     	try {
     		if (tbl.equals("book")) {
@@ -39,13 +62,15 @@ public class SQLapi {
             ps.execute();
 
             JOptionPane.showMessageDialog(null, "Successfully Inserted");
-            //SQLGetData();
-    	}catch(SQLException e) {}
+            GetData(tbl, dtm, "", "");
+    	}catch(SQLException e) {
+    		System.out.println(e);
+    	}
     }
     
     public String[] SQLRead(String tbl, String id) {
-    	String[] arr = {};
-    	String sql;
+    	String sql, rs1 = null, rs2 = null, rs3 = null, rs4 = null,rs5 = null, rs6 = null,rs7 = null,rs8 = null;
+    	String[] arr;
     	try {
     		if(tbl.equals("book")) {
     			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `book_id` LIKE '%").concat(id).concat("%' OR `title` LIKE '%").concat(id).concat("%';");
@@ -58,26 +83,31 @@ public class SQLapi {
                 ps = con.prepareStatement(sql);
                 rs = ps.executeQuery();
     		}else {
-    			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `id` LIKE '%").concat(id).concat("%';");
+    			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `id` LIKE '%").concat(id).concat("%' OR `name` LIKE '%").concat(id).concat("%';");
     			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
                 ps = con.prepareStatement(sql);
                 rs = ps.executeQuery();
+                
+	            while(rs.next()) {
+					 rs1 = rs.getString(1);
+					 rs2 = rs.getString(2);
+					 rs3 = rs.getString(3);
+					 rs4 = rs.getString(4);
+					 rs5 = rs.getString(5);
+					 rs6 = rs.getString(6);
+					 rs7 = rs.getString(7);
+					 rs8 = rs.getString(8);
+	            }
+	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7, rs8};
+	            return arr;
     		}
-    		int i = 0;
-            while(rs.next()) {
-            	arr[i] = rs.getString(i+1);
-            	i += 1;
-            }
     		
-    		return arr;
-    	} catch(SQLException e) {
-    		JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
-    	}
+    	} catch(SQLException e) {}
+    	return null;
     	
-    	return arr;
     }
     
-    public void SQLUpdate(String tbl, String id, String[] arr){
+    public void SQLUpdate(String tbl, String id, String[] arr, DefaultTableModel dtm){
     	String query;
     	try{
             con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
@@ -98,11 +128,11 @@ public class SQLapi {
             }else{
                 JOptionPane.showMessageDialog(null, "Record Update Unsuccessful");
             }
-            //SQLGetData();
+            GetData(tbl, dtm, "", "");
         }catch(SQLException e){}
     }
     
-    public void SQLDelete(String tbl, String _id) {
+    public void SQLDelete(String tbl, String _id, DefaultTableModel dtm) {
     	String sql;
     	try{
     		if(tbl.equals("book")) {
@@ -117,17 +147,17 @@ public class SQLapi {
             ps.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Successfully Deleted Records!");
-            //SQLGetData();
+            GetData(tbl, dtm, "", "");
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, e);
         }
     }
     
-    public void GetData(String tbl, DefaultTableModel dtm) {
+    public void GetData(String tbl, DefaultTableModel dtm, String name, String pan) {
     	String sql;
     	try{
-            sql = "SELECT * FROM ".concat(tbl);
-            con = DriverManager.getConnection("jdbc:mysql://localhost/laboratory_system","root","");
+            sql = "SELECT * FROM tbl_".concat(tbl);
+            con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -144,23 +174,53 @@ public class SQLapi {
                     String _7 = rs.getString(7);
                 	dtm.addRow(new Object[]{_1, _2, _3, _4, _5, _7});
                 }
+            	
             } else if(tbl.equals("booksissued")){
-            	while(rs.next()){
-            		String _1 = rs.getString(1);
-                    String _2 = rs.getString(2);
-                    String _3 = rs.getString(3);
-                    String _4 = rs.getString(4);
-                    String _5 = rs.getString(5);
-                    String _6 = rs.getString(6);
-                    String _8 = rs.getString(8);
-                    if(dtm.toString().equals("modelInfo")) {
-                    	dtm.addRow(new Object[]{_3, _5, _6, _8});
-                    } else if(dtm.toString().equals("modelUP")){
-                    	dtm.addRow(new Object[]{_2, _3, _5, _6, _8});
+            	String _1 = null, _2 = null, _3 = null, _4 = null, _5 = null, _6 = null, _7 = null, _8 = null;
+                    if("modelInfo".equals(pan)) {
+                    	sql = "SELECT * FROM tbl_".concat(tbl).concat(" WHERE `member_name` LIKE '").concat(name).concat("';");
+                        con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                    	while(rs.next()){
+        					 _3 = rs.getString(3);
+        					 _5 = rs.getString(5);
+        					 _6 = rs.getString(6);
+        					 _8 = rs.getString(8);
+        					 dtm.addRow(new Object[]{_3, _5, _6, _8});
+                    	}
+                    	
+                    } else if("modelUp".equals(pan)){
+                    	sql = "SELECT * FROM tbl_".concat(tbl).concat(" WHERE `member_name` LIKE '%").concat(name).concat("%';");
+                        con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                    	while(rs.next()){
+        					 _2 = rs.getString(2);
+        					 _3 = rs.getString(3);
+        					 _5 = rs.getString(5);
+        					 _6 = rs.getString(6);
+        					 _8 = rs.getString(8);
+        					 dtm.addRow(new Object[]{_2, _3, _5, _6, _8});
+                    	}
+                    	
                     }else {
-                    	dtm.addRow(new Object[]{_1, _2, _3, _4, _5, _6, _8});
+                    	sql = "SELECT * FROM `tbl_".concat(tbl).concat("`;");
+                        con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                    	while(rs.next()){
+        					 _1 = rs.getString(1);
+        					 _2 = rs.getString(2);
+        					 _3 = rs.getString(3);
+        					 _4 = rs.getString(4);
+        					 _5 = rs.getString(5);
+        					 _6 = rs.getString(6);
+        					 _8 = rs.getString(8);
+        					 dtm.addRow(new Object[]{_1, _2, _3, _4, _5, _6, _8});
+                    	}
+                    	
                     }
-                }
             }else {
             	while(rs.next()){
             		String _1 = rs.getString(1);
@@ -168,26 +228,45 @@ public class SQLapi {
                     String _3 = rs.getString(3);
                     String _5 = rs.getString(5);
                     String _6 = rs.getString(6);
-                	dtm.addRow(new Object[]{_1, _3, _2, _6, _5});
+                	dtm.addRow(new Object[]{_1, _3, _2, _5, _6});
                 }
             }
            
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "SQL Error: No Results Found!");
+            JOptionPane.showMessageDialog(null, "SQL Error: No Results Found! " + e);
         }
     }
     
-    public boolean verifyDuplicate(String tbl, String pass) {
+    public boolean verifyDuplicatePass(String tbl, String pass) {
     	String sql;
     	boolean val;
     	try {
-			sql = "SELECT `password` FROM `tbl_".concat(tbl).concat("` WHERE `password` LIKE '%").concat(pass).concat("%';");
+			sql = "SELECT `password` FROM `tbl_" + tbl + "` WHERE `password` LIKE '" + pass + "';";
 			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
     		
     		val = rs.next();
-    		return val;
+    		if(!val) {
+            	return false;
+            }
+    	} catch(SQLException e) {}
+    	return true;
+    }
+    
+    public boolean verifyDuplicateID(String tbl, String pass) {
+    	String sql;
+    	boolean val;
+    	try {
+    		sql = "SELECT `password` FROM `tbl_" + tbl + "` WHERE `password` LIKE '" + pass + "';";
+			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+    		
+    		val = rs.next();
+    		if(!val) {
+            	return false;
+            }
     	} catch(SQLException e) {}
     	return true;
     }

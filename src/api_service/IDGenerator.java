@@ -5,21 +5,17 @@ public class IDGenerator {
 	SQLapi sql = new SQLapi();
 	String chars = "0123456789";
 	StringBuilder sb = new StringBuilder(10);
-	private String id = "EUPLS";
+	private String id = "UEP-";
 	
 	public void generator(String entity) {
-		boolean flag = true;
-		while(!flag) {
-			for(int i = 0; i < sb.capacity(); i++) {
-				sb.append(chars.charAt(rand.nextInt(chars.length())));
-			}
+		
+		for(int i = 0; i < 10; i++) {
+			sb.append(chars.charAt(rand.nextInt(chars.length())));
+		}
+		if(!sql.verifyDuplicateID(entity, sb.toString())) {
 			id += sb.toString();
-			if(!sql.verifyDuplicate(entity, id)) {
-				flag = false;
-			}
 		}
 	}
-	
 	public String GetID() {
 		return id;
 	}

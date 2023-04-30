@@ -18,7 +18,6 @@ public class Dashboard extends AguaComponents{
 	
 	public String[] headers = {"Total Books", "Issued Books", "Available Books", "Late Returns", "No. of Students", "No. of Teachers"}; 
 	public String[] icons = {"books", "open-books", "carry-books", "opened-book", "student", "teacher"};
-	public String[] def = {"1,150", "25", "50", "20", "2,050", "10"};
 	
 	public void init() {
 		setLayout(null);

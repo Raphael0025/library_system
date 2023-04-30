@@ -10,7 +10,7 @@ public class NewMemberRecord extends AguaComponents{
 	public JButton create = new RoundedButton("CREATE");
 	public JButton gen = new RoundedButton("GENERATE");
 	JLabel[] labels = new JLabel[8];
-	JTextField[] tf = new JTextField[8];
+	public JTextField[] tf = new JTextField[8];
 	String[] txt = {"Name", "Member Type", "Address", "Age", "Contact No.", "Email Address", "Password","Member ID"};
 	   
 	public NewMemberRecord(int w, int h) {

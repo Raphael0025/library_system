@@ -13,7 +13,7 @@ public class memberList extends AguaComponents{
 	public JButton addMember = new RoundedButton("Add New Member");
 	
 	String[] column = {"Member ID","Member Type", "Member Name", "Email", "Contact"};
-    DefaultTableModel model = new DefaultTableModel();
+    public DefaultTableModel model = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
     JTable table = new JTable(model){
         @Override
@@ -21,7 +21,7 @@ public class memberList extends AguaComponents{
             return false;
         }
     };
-    JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+    public JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
     
 	public memberList() {
 		init();
@@ -69,8 +69,6 @@ public class memberList extends AguaComponents{
 		((RoundedButton)addMember).setBorder(233, 62, 62, 255, 255, 255);
 		((RoundedButton)addMember).setFore(255, 255, 255, 255, 0, 0);
 		addMember.setFont(new Font("Open Sans", 1, 18));
-		
-		//model.addRow(new Object[]{"1", "2", "3", "4"});
 		
 		this.add(scrollTable);
 		this.add(addMember);

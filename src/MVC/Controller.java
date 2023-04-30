@@ -5,6 +5,7 @@ import java.awt.font.*;
 import java.util.*;
 import javax.swing.*;
 import custom.*; 
+import api_service.*;
 import screens.*;
 
 @SuppressWarnings("serial")
@@ -27,6 +28,8 @@ public class Controller extends MyClass{
 	UserProfile up;
 	MemberDashboard md;
 	BookInfo bki;
+	SQLapi sql = new SQLapi();
+	DashResult dr = new DashResult();
 	
 	public String[] arr;
 	
@@ -60,9 +63,9 @@ public class Controller extends MyClass{
 		tb.home.addMouseListener(this);
 		md.query.addActionListener(this);
 		
-		int len = dashB.def.length;
-		arr = new String[len];
-		arr = dashB.def;
+//		int len = dashB.def.length;
+//		arr = new String[len];
+//		arr = dashB.def;
 	}
 	
 	@Override
@@ -72,24 +75,40 @@ public class Controller extends MyClass{
         
 		switch(btn) {
 			case "LOGIN" :
-				mp.setSize(1300, 750);
-				mp.setLocationRelativeTo(null);
-				lp.setVisible(false);
-				tb.setVisible(true);
+				String user = lp.tf.getText();
+				@SuppressWarnings("deprecation") 
+				String pass = lp.pf.getText();
 				
 				if(lp.admin) {
-					tb.Title("ADMIN");
-					mp.setTitle("Library Management - Dashboard(ADMIN)");
-					for(int i = 0; i < 6; i++) {
-						dashB.setContent(i, arr[i]);
+					if(sql.SQLAccount("employees", user, pass)) {
+						mp.setSize(1300, 750);
+						mp.setLocationRelativeTo(null);
+						lp.setVisible(false);
+						tb.setVisible(true);
+						tb.Title("ADMIN");
+						mp.setTitle("Library Management - Dashboard(ADMIN)");
+						DashCont();
+						
+						dashB.setVisible(true);
+						sb.setVisible(true);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sorry Wrong Credentials", "Error", JOptionPane.ERROR_MESSAGE);
 					}
-					dashB.setVisible(true);
-					sb.setVisible(true);
 				} else {
-					tb.Title("MEMBER");
-					mp.setTitle("Library Management - Dashboard(MEMBER)");
-					md.setVisible(true);
-					tb.home.setVisible(true);
+					if(sql.SQLAccount("member", user, pass)) {
+						mp.setSize(1300, 750);
+						mp.setLocationRelativeTo(null);
+						lp.setVisible(false);
+						tb.setVisible(true);
+						tb.Title("MEMBER");
+						mp.setTitle("Library Management - Dashboard(MEMBER)");
+						md.setVisible(true);
+						tb.home.setVisible(true);
+						
+						sql.GetData("book", md.model, "", "");
+					}else {
+						JOptionPane.showMessageDialog(null, "Sorry Wrong Credentials", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				
 				break;
@@ -116,12 +135,7 @@ public class Controller extends MyClass{
 				for(int i = 0; i < up.tf.length; i++) {
 					up.tf[i].setText("");
 				}
-				
-				for(int i = 0; i < 6; i++) {
-					//dashB.setVal(i, def[i]);
-					
-				}
-				
+				DashCont();
 				break;
 			case "MEMBERS":
 				sb.Default(sb.dash, "dash");
@@ -137,6 +151,7 @@ public class Controller extends MyClass{
 				for(int i = 0; i < up.tf.length; i++) {
 					up.tf[i].setText("");
 				}
+				sql.GetData("member", m_list.model, "", "");
 				
 				break;
 			case "BOOK SHELF":
@@ -153,6 +168,7 @@ public class Controller extends MyClass{
 				for(int i = 0; i < up.tf.length; i++) {
 					up.tf[i].setText("");
 				}
+				sql.GetData("book", bs.model, "", "");
 				
 				break;
 			case "ISSUED":
@@ -169,15 +185,43 @@ public class Controller extends MyClass{
 				for(int i = 0; i < up.tf.length; i++) {
 					up.tf[i].setText("");
 				}
+				sql.GetData("booksissued", ib.model, "", "");
 				
 				break;
+			case "Edit":
+				JOptionPane.showMessageDialog(null, mr.tf[0].getText(), "Input Error", JOptionPane.ERROR_MESSAGE);
+				break;
 			case "Search Member":
-				pf = new promptFrame("Search Member", 700, 720);
-				pf.setVisible(true);
-				mr = new M_RUD(pf.getWidth(), pf.getHeight());
-				mr.edit.addActionListener(this);
-				pf.add(mr);
-				
+				String[] arr = sql.SQLRead("member", m_list.search.getText());
+				if(arr[0] == null) {
+					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
+				} else {
+					
+					pf = new promptFrame("Search Member", 700, 720);
+					pf.setVisible(true);
+					mr = new M_RUD(pf.getWidth(), pf.getHeight());
+					mr.edit.addActionListener(this);
+					mr.del.addActionListener(this);
+					pf.add(mr);
+					
+					int y2 = 130;
+					for(int i = 0; i < mr.tf.length; i++) {
+						mr.tf[i] = new CustomTextField(20, arr[i], 10);
+						((CustomTextField)mr.tf[i]).setBounds(210, y2, 400, 30);
+						mr.tf[i].setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+						mr.tf[i].setFont(new Font("Open Sans", 1, 14));
+						mr.tf[i].setForeground(new Color(202, 2, 4));
+						y2+=40;
+					}
+					mr.tf[0].setEditable(false);
+					mr.tf[6].setEditable(false);
+					mr.tf[7].setEditable(false);
+					for(int i = 0; i < mr.tf.length; i++) {
+						mr.add(mr.tf[i]);
+					}
+					sql.GetData("booksissued", mr.modelInfo, mr.tf[1].getText(), "modelInfo");
+				}
+					
 				break;
 			case "Issue this Book":
 				pf.dispose();
@@ -257,7 +301,14 @@ public class Controller extends MyClass{
 						nmr.create.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
 					}
 				});
-				//nmr.edit.addActionListener(this);
+				nmr.gen.addActionListener(this);
+				nmr.create.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						sql.SQLCreate("member", nmr.tf[7].getText(), nmr.tf[0].getText(), nmr.tf[1].getText(), nmr.tf[3].getText(), nmr.tf[2].getText(), nmr.tf[4].getText(), nmr.tf[5].getText(), nmr.tf[6].getText(), m_list.model);
+				
+					}
+				});
 				
 				pf.add(nmr);
 				break;
@@ -277,6 +328,19 @@ public class Controller extends MyClass{
 				});
 				
 				pf.add(nbr);
+				break;
+			case "GENERATE":
+				PasswordGenerator pg = new PasswordGenerator();
+				IDGenerator ig = new IDGenerator();
+				
+				pg.generator("member");
+				ig.generator("member");
+				String p = pg.GetPassword();
+				String id = ig.GetID();
+				
+				nmr.tf[6].setText(p);
+				nmr.tf[7].setText(id);
+				System.out.println(id + " " + p);
 				break;
 			case "Edit Book":
 				JOptionPane.showMessageDialog(null, "Oks");
@@ -426,5 +490,16 @@ public class Controller extends MyClass{
 		sb.Default(sb.member, "members");
 		sb.Default(sb.books, "shelf");
 		sb.Default(sb.issued, "book");
+	}
+	
+	public void DashCont() {
+
+		dashB.setContent(0, String.valueOf(dr.GetTotalBooks()));
+		dashB.setContent(1, String.valueOf(dr.GetTotalIssued()));
+		dashB.setContent(2, String.valueOf(dr.GetTotalAvailable()));
+		dashB.setContent(3, String.valueOf(dr.GetLateBooks()));
+		dashB.setContent(4, String.valueOf(dr.GetTotalStudent()));
+		dashB.setContent(5, String.valueOf(dr.GetTotalTeachers()));
+		
 	}
 }

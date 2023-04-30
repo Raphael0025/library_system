@@ -12,7 +12,7 @@ public class MemberDashboard extends AguaComponents{
 	public JButton query = new RoundedButton("SEARCH");
 
 	String[] column = {"Book ID","Book Type", "Book Title", "Author", "Published Date", "Availability"};
-    DefaultTableModel model = new DefaultTableModel();
+    public DefaultTableModel model = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
     JTable table = new JTable(model){
         @Override
@@ -20,7 +20,7 @@ public class MemberDashboard extends AguaComponents{
             return false;
         }
     };
-    JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+    public JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
     
 	
 	public MemberDashboard() {

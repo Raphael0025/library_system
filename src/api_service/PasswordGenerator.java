@@ -10,17 +10,13 @@ public class PasswordGenerator {
 	private String password = null;
 	
 	public void generator(String entity) {
-		boolean flag = true;
-		while(!flag) {
-			for(int i = 0; i < 8; i++) {
-				sb.append(chars.charAt(rand.nextInt(chars.length())));
-			}
-			password = sb.toString();
-			if(!sql.verifyDuplicate(entity, password)) {
-				flag = false;
-			}
-		}
 		
+		for(int i = 0; i < 8; i++) {
+			sb.append(chars.charAt(rand.nextInt(chars.length())));
+		}
+		if(!sql.verifyDuplicatePass(entity, sb.toString())) {
+			password = sb.toString();
+		}
 	}
 	
 	public String GetPassword() {

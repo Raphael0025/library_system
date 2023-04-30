@@ -12,19 +12,19 @@ public class M_RUD extends AguaComponents{
 	public JButton edit = new RoundedButton("Edit");
 	public JButton del = new RoundedButton("Delete");
 	JLabel[] labels = new JLabel[8];
-	JTextField[] tf = new JTextField[8];
+	public JTextField[] tf = new JTextField[8];
 
 	String[] column = {"Books Issued","Issued Date", "Returned Date", "Return Status"};
 	String[] txt = {"Member ID", "Name", "Member Type", "Address", "Age", "Contact No.", "Email Address", "Password"};
-    DefaultTableModel modelInfo = new DefaultTableModel();
+    public DefaultTableModel modelInfo = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
-    JTable table = new JTable(modelInfo){
+    public JTable table = new JTable(modelInfo){
         @Override
         public boolean editCellAt(int row, int col, java.util.EventObject e){
             return false;
         }
     };
-    JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+    public  JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
     
 	public M_RUD(int w, int h) {
 		init(w, h);
@@ -57,16 +57,6 @@ public class M_RUD extends AguaComponents{
 			labels[i].setForeground(Color.white);
 			y+=40;
 		}
-		
-		int y2 = 130;
-		for(int i = 0; i < tf.length; i++) {
-			tf[i] = new CustomTextField(20, "", 10);
-			((CustomTextField)tf[i]).setBounds(210, y2, 400, 30);
-			tf[i].setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-			tf[i].setFont(new Font("Open Sans", 1, 14));
-			tf[i].setForeground(new Color(202, 2, 4));
-			y2+=40;
-		}
 		//JTable
         for (String column1 : column) {
         	modelInfo.addColumn(column1);
@@ -84,9 +74,6 @@ public class M_RUD extends AguaComponents{
         }
         for(int i = 0; i < labels.length; i++) {
 			this.add(labels[i]);
-		}
-        for(int i = 0; i < tf.length; i++) {
-			this.add(tf[i]);
 		}
         this.add(header);
         this.add(scrollTable);
