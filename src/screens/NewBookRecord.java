@@ -8,9 +8,9 @@ public class NewBookRecord extends AguaComponents{
 	static String name = "ADD NEW BOOK";
 	public JLabel header = new JLabel(name);
 	public JButton adb = new RoundedButton("ADD BOOK");
-	JLabel[] labels = new JLabel[5];
-	JTextField[] tf = new JTextField[5];
-	String[] txt = {"Book Type", "Book Title", "Author(s)", "Published Date", "Shelf No."};
+	String[] txt = {"Book Type", "Book Title", "Author(s)", "Published Date", "Shelf No.", "Book Status"};
+	JLabel[] labels = new JLabel[txt.length];
+	JTextField[] tf = new JTextField[txt.length];
 	
 	public NewBookRecord(int w, int h) {
 		init(w, h);
@@ -25,7 +25,7 @@ public class NewBookRecord extends AguaComponents{
 		header.setFont(new Font("Open Sans", 1, 30));
 		header.setForeground(Color.white);
 		
-		((RoundedButton)adb).setBounds(360, 330, 200, 50);
+		((RoundedButton)adb).setBounds(360, 340, 200, 50);
 		((RoundedButton)adb).setArc(20);
 		Default(adb, "book");
 		adb.setFont(new Font("Open Sans", 1, 20));
