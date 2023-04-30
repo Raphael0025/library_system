@@ -9,7 +9,7 @@ public class MemberDashboard extends AguaComponents{
 
 	public JLabel title = new JLabel("Show Available Books");
 	public JTextField searchQry = new CustomTextField(20, "Search", 20);
-	public JButton query = new RoundedButton("Search");
+	public JButton query = new RoundedButton("SEARCH");
 
 	String[] column = {"Book ID","Book Type", "Book Title", "Author", "Published Date", "Availability"};
     DefaultTableModel model = new DefaultTableModel();
@@ -33,7 +33,6 @@ public class MemberDashboard extends AguaComponents{
 		setBounds(10, 70, 1260, 630, 20);
 		setColor(219,105,108, 255);
 		
-
 		//JTable
         for (String column1 : column) {
             model.addColumn(column1);

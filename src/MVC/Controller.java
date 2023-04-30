@@ -1,6 +1,8 @@
 package MVC;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.*;
+import java.util.*;
 import javax.swing.*;
 import custom.*; 
 import screens.*;
@@ -24,6 +26,7 @@ public class Controller extends MyClass{
 	ViewIssuedBook vib;
 	UserProfile up;
 	MemberDashboard md;
+	BookInfo bki;
 	
 	public String[] arr;
 	
@@ -54,6 +57,8 @@ public class Controller extends MyClass{
 		bs.query.addActionListener(this);
 		ib.query.addActionListener(this);
 		tb.name.addMouseListener(this);
+		tb.home.addMouseListener(this);
+		md.query.addActionListener(this);
 		
 		int len = dashB.def.length;
 		arr = new String[len];
@@ -290,8 +295,13 @@ public class Controller extends MyClass{
 						vib.returnB.setIcon(new ImageIcon("src\\assets\\white-book.png"));
 					}
 				});
-				
 				pf.add(vib);
+				break;
+			case "SEARCH":
+				pf = new promptFrame("Search Book", 600,  370);
+				pf.setVisible(true);
+				bki= new BookInfo(pf.getWidth(), pf.getHeight());
+				pf.add(bki);
 				break;
 		}
 	}
@@ -318,33 +328,79 @@ public class Controller extends MyClass{
 			dashB.setVisible(false);
 			m_list.setVisible(false);
 			bs.setVisible(false);
+			if(lp.admin) {
+				up.setBounds(150, 70, 1120, 630, 20);
+				up.scrollTable.setVisible(false);
+			} else {
+				up.setBounds(10, 70, 1260, 630, 20);
+				up.scrollTable.setVisible(true);
+			}
 		} 
-//		else if (e.getSource() == tb.home) {
-//			md.setVisible(true);
-//			up.setVisible(false);
-//		}
+		else if (e.getSource() == tb.home) {
+			md.setVisible(true);
+			up.setVisible(false);
+		}
 	
 	}
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		Font font;
+		
 		if(e.getSource() == tb.arrow) {
 			tb.arrow.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		} else if (e.getSource() == mp.out) {
+			font = mp.out.getFont();
+
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			mp.out.setFont(font.deriveFont(attributes));
 			mp.out.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			
 		} else if(e.getSource() == tb.name) {
+			font = tb.name.getFont();
+
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			tb.name.setFont(font.deriveFont(attributes));
 			tb.name.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		} else if(e.getSource() == tb.home) {
+			font = tb.home.getFont();
+
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			tb.home.setFont(font.deriveFont(attributes));
+			tb.home.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		}
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent e) {
+		Font font;
+		
 		if(e.getSource() == tb.arrow) {
 			tb.arrow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else if (e.getSource() == mp.out) {
+			font = mp.out.getFont();
+
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, -1);
+			mp.out.setFont(font.deriveFont(attributes));
 			mp.out.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else if(e.getSource() == tb.name) {
+			font = tb.name.getFont();
+
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, -1);
+			tb.name.setFont(font.deriveFont(attributes));
 			tb.name.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		} else if(e.getSource() == tb.home) {
+			font = tb.home.getFont();
+
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, -1);
+			tb.home.setFont(font.deriveFont(attributes));
+			tb.home.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 	

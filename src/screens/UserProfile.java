@@ -1,9 +1,9 @@
 package screens;
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import custom.*;
-import components.*;
 
 @SuppressWarnings("serial")
 public class UserProfile extends AguaComponents{
@@ -11,10 +11,21 @@ public class UserProfile extends AguaComponents{
 	public JLabel title = new JLabel("USER PROFILE");
 	public JButton modify = new RoundedButton("Edit Staff");
 	public JButton delS = new RoundedButton("Delete Staff");
-	String[] txt = {"Staff ID", "Staff Name", "Staff Type", "Age","Address", "Contact No.", "Email Address", "Password"};
+	String[] txt = {"ID", "Name", "Type", "Age","Address", "Contact", "Email", "Password"};
 	JLabel[] labels = new JLabel[txt.length];
 	public JTextField[] tf = new JTextField[txt.length];
-	
+
+	String[] column = {"Book ID","Book Type", "Book Title", "Author", "Published Date", "Availability"};
+    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableCellRenderer render = new DefaultTableCellRenderer();
+    JTable table = new JTable(model){
+        @Override
+        public boolean editCellAt(int row, int col, java.util.EventObject e){
+            return false;
+        }
+    };
+    public JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+    
 	public UserProfile() {
 		init();
 	}
@@ -25,6 +36,22 @@ public class UserProfile extends AguaComponents{
 		setBounds(150, 70, 1120, 630, 20);
 		setColor(219,105,108, 255);
 		
+		//JTable
+        for (String column1 : column) {
+            model.addColumn(column1);
+        }
+        scrollTable.setBounds(520, 50, 720, 550);
+        render.setFont(new Font("Arial", Font.PLAIN, 12));
+        render.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+        table.getTableHeader().setFont(new Font("Arial", 1, 12));
+        table.getTableHeader().setForeground(Color.white);;
+        table.getTableHeader().setBackground(new Color (202, 2, 4));
+        for( int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(render);
+        }
+        
 		title.setBounds(30,0,300,80);
 		title.setFont(new Font("Open Sans", 1, 36));
 		title.setForeground(Color.white);
@@ -87,6 +114,7 @@ public class UserProfile extends AguaComponents{
 			this.add(tf[i]);
 		}
 		
+        this.add(scrollTable);
         this.add(delS);
         this.add(modify);
 		this.add(title);
