@@ -11,7 +11,7 @@ public class issuedBook extends AguaComponents{
 	public JTextField search = new CustomTextField(20, "Search", 20);
 	public JButton query = new RoundedButton("Search Issued Book");
 
-	String[] column = {"Book ID", "Book Title", "Member ID", "Issued Date", "Returned Date", "Date Returned"};
+	String[] column = {"Issued ID", "Book Title", "Member Name", "Issued Date", "Returned Date", "Date Returned"};
     public DefaultTableModel model = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
     JTable table = new JTable(model){

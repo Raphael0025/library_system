@@ -90,7 +90,7 @@ public class SQLapi {
 	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7};
 	            return arr;
     		}else if(tbl.equals("booksissued")) {
-    			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `issue_id` LIKE '%").concat(id).concat("%' OR `book_id` LIKE '%").concat(id).concat("%' OR `member_name` LIKE '%").concat(id).concat("%';");
+    			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `issue_id` LIKE '%").concat(id).concat("%' OR `book_id` LIKE '%").concat(id).concat("%' OR `book_title` LIKE '%").concat(id).concat("%' OR `member_name` LIKE '%").concat(id).concat("%';");
     			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
                 ps = con.prepareStatement(sql);
                 rs = ps.executeQuery();
@@ -105,7 +105,7 @@ public class SQLapi {
 					 rs7 = rs.getString(7);
 					 rs8 = rs.getString(8);
 	            }
-	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7, rs8};
+	            arr = new String[]{rs1, rs2, rs3, rs4, rs5,rs6, rs7, rs8};
 	            return arr;
     		}else {
     			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `id` LIKE '%").concat(id).concat("%' OR `name` LIKE '%").concat(id).concat("%';");
@@ -178,6 +178,19 @@ public class SQLapi {
         }
     }
     
+    public boolean verifyMember(String memberName) {
+    	String sql = "SELECT EXISTS(SELECT * FROM `tbl_member` WHERE `name` LIKE '%".concat(memberName).concat("%');");
+    	try {
+			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root",""); 
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt(1) != 0;
+				
+		} catch (SQLException e) {}
+       return false;
+    }
+    
     public void GetData(String tbl, DefaultTableModel dtm, String name, String pan) {
     	String sql;
     	try{
@@ -236,13 +249,12 @@ public class SQLapi {
                         rs = ps.executeQuery();
                     	while(rs.next()){
         					 _1 = rs.getString(1);
-        					 _2 = rs.getString(2);
         					 _3 = rs.getString(3);
         					 _4 = rs.getString(4);
         					 _5 = rs.getString(5);
         					 _6 = rs.getString(6);
         					 _8 = rs.getString(8);
-        					 dtm.addRow(new Object[]{_1, _2, _3, _4, _5, _6, _8});
+        					 dtm.addRow(new Object[]{_1, _3, _4, _5, _6, _8});
                     	}
                     	
                     }
@@ -260,6 +272,34 @@ public class SQLapi {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "SQL Error: No Results Found! " + e);
         }
+    }
+    
+    public void setBookStatus(String tbl, String stat, String id, DefaultTableModel dtm) {
+    	String query;
+    	try{
+    		switch(tbl) {
+    		case "book":
+    			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+                query = "UPDATE `tbl_book` SET `status`= ? WHERE `book_id` = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, stat);
+                ps.setString(2, id);
+                ps.executeUpdate();
+                GetData("book", dtm, "", "");
+    			break;
+    		case "booksissued":
+    			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+                query = "UPDATE `tbl_booksissued` SET `status`= ? WHERE `issue_id` = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, stat);
+                ps.setString(2, id);
+                ps.executeUpdate();
+                GetData("booksissued", dtm, "", "");
+    			break;
+    		}
+            
+           
+        }catch(SQLException e){}
     }
     
     public boolean verifyDuplicatePass(String tbl, String pass) {
@@ -374,4 +414,5 @@ public class SQLapi {
     	} catch(SQLException e) {}
     	return 0;
     }
+
 }

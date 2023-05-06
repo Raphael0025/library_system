@@ -11,7 +11,7 @@ public class ViewIssuedBook extends AguaComponents{
 	public JButton returnB = new RoundedButton("Return Book");
 	JLabel[] labels = new JLabel[8];
 	public JTextField[] tf = new JTextField[8];
-	String[] txt = {"Book ID", "Book Title", "Member ID", "Member Name", "Issued Date", "Returned Date", "Late Fine Fee", "Issued Status"};
+	String[] txt = {"Issue ID", "Book ID", "Book Title", "Member Name", "Issued Date", "Returned Date", "Late Fine Fee", "Issued Status"};
 	
 	public ViewIssuedBook(int w, int h) {
 		init(w, h);
@@ -47,6 +47,7 @@ public class ViewIssuedBook extends AguaComponents{
 			tf[i].setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 			tf[i].setFont(new Font("Open Sans", 1, 14));
 			tf[i].setForeground(new Color(202, 2, 4));
+			tf[i].setEditable(false);
 			y2+=40;
 		}
 

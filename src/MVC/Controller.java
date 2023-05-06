@@ -219,8 +219,8 @@ public class Controller extends MyClass{
 				pf.setVisible(true);
 				br = new BookRent(pf.getWidth(), pf.getHeight());
 				br.tf[0].setText(brud.tf[0].getText());
-				br.tf[1].setText(brud.tf[1].getText());
-				//br.edit.addActionListener(this);
+				br.tf[1].setText(brud.tf[2].getText());
+
 				pf.add(br);
 				
 				br.issB.addMouseListener(new MouseAdapter() {
@@ -233,7 +233,31 @@ public class Controller extends MyClass{
 						br.issB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
 					}
 				});
+				br.issB.addActionListener(this);
 				
+				break;
+			case "Issue Book":
+				if(sql.verifyMember(br.tf[2].getText())) {
+					int att = 0;
+					String id = ig.generator("booksissued");
+					for(int i = 0; i < br.tf.length; i++) {
+						if(br.tf[i].getText().equals("")) {
+							att++;
+						}
+					}
+					if(att==0) {
+						sql.setBookStatus("book", "unavailable", br.tf[0].getText(), bs.model);
+						sql.SQLCreate("booksissued", id, br.tf[0].getText(), br.tf[1].getText(), br.tf[2].getText(), br.tf[3].getText(), br.tf[4].getText(), br.tf[5].getText(), "not returned", ib.model);
+						
+						pf.dispose();
+						att = 0;
+					}else {
+						JOptionPane.showMessageDialog(null, "Please fill out details!", "Alert!", JOptionPane.ERROR_MESSAGE);
+						att = 0;
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Member Not Found!", "Error 204", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			case "Search Book":
 				String[] arr2 = sql.SQLRead("book", bs.search.getText());
@@ -281,6 +305,9 @@ public class Controller extends MyClass{
 				
 					for(int i = 0; i < brud.tf.length; i++) {
 						brud.tf[i].setText(arr2[i]);
+					}
+					if(brud.tf[6].getText().equals("unavailable")) {
+						brud.issueB.setVisible(false);
 					}
 				}
 				break;
@@ -357,7 +384,7 @@ public class Controller extends MyClass{
 				if(arr3[0] == null) {
 					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
 				} else {
-					pf = new promptFrame("New Book", 600, 520);
+					pf = new promptFrame("Issued Book", 600, 520);
 					pf.setVisible(true);
 					vib = new ViewIssuedBook(pf.getWidth(), pf.getHeight());
 					vib.returnB.addMouseListener(new MouseAdapter() {
@@ -370,13 +397,20 @@ public class Controller extends MyClass{
 							vib.returnB.setIcon(new ImageIcon("src\\assets\\white-book.png"));
 						}
 					});
+					vib.returnB.addActionListener(this);
 					pf.add(vib);
-
+					
 					for(int i = 0; i < vib.tf.length; i++) {
 						vib.tf[i].setText(arr3[i]);
 					}
 				}
 				
+				break;
+			case "Return Book":
+				sql.setBookStatus("booksissued", "returned", vib.tf[0].getText(), ib.model);
+				sql.setBookStatus("book", "available", vib.tf[1].getText(), bs.model);
+				JOptionPane.showMessageDialog(null, "Book Successfully Returned", "Returned", JOptionPane.INFORMATION_MESSAGE);
+				pf.dispose();
 				break;
 			case "SEARCH":
 				pf = new promptFrame("Search Book", 600,  370);
