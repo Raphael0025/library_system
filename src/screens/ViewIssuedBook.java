@@ -10,7 +10,7 @@ public class ViewIssuedBook extends AguaComponents{
 	public JLabel header = new JLabel(name);
 	public JButton returnB = new RoundedButton("Return Book");
 	JLabel[] labels = new JLabel[8];
-	JTextField[] tf = new JTextField[8];
+	public JTextField[] tf = new JTextField[8];
 	String[] txt = {"Book ID", "Book Title", "Member ID", "Member Name", "Issued Date", "Returned Date", "Late Fine Fee", "Issued Status"};
 	
 	public ViewIssuedBook(int w, int h) {

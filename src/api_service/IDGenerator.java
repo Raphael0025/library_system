@@ -5,18 +5,30 @@ public class IDGenerator {
 	SQLapi sql = new SQLapi();
 	String chars = "0123456789";
 	StringBuilder sb = new StringBuilder(10);
-	private String id = "UEP-";
+	String bulk = "", idd = "";
 	
-	public void generator(String entity) {
-		
+	public String generator(String entity) {
+		String temp ;
 		for(int i = 0; i < 10; i++) {
-			sb.append(chars.charAt(rand.nextInt(chars.length())));
+			bulk = bulk + chars.charAt(rand.nextInt(chars.length()));
 		}
-		if(!sql.verifyDuplicateID(entity, sb.toString())) {
-			id += sb.toString();
+		sb.append(bulk);
+		if(entity.equals("book")) {
+			idd = "bid".concat(sb.toString());
 		}
-	}
-	public String GetID() {
-		return id;
+		else if(entity.equals("member")) {
+			idd = "UEP-".concat(sb.toString());
+		}
+		else if(entity.equals("booksissued")) {
+			idd = "IID".concat(sb.toString());
+		}
+		if(!sql.verifyDuplicateID(entity, idd)) {
+			temp = idd;
+			bulk = "";
+			idd = "";
+			sb.delete(0, 10);
+			return temp;
+		}
+		return null;
 	}
 }

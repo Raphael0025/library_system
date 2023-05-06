@@ -9,9 +9,9 @@ public class BookRent extends AguaComponents{
 	static String name = "FILL OUT DETAILS TO ISSUE BOOK";
 	public JLabel header = new JLabel(name);
 	public JButton issB = new RoundedButton("Issue Book");
-	JLabel[] labels = new JLabel[7];
-	JTextField[] tf = new JTextField[7];
-	String[] txt = {"Book ID", "Book Title", "Member ID", "Member Name", "Issued Date", "Returned Date", "Late Fine Fee"};
+	JLabel[] labels = new JLabel[6];
+	public JTextField[] tf = new JTextField[6];
+	String[] txt = {"Book ID", "Book Title", "Member Name", "Issued Date", "Returned Date", "Late Fine Fee"};
 	
 	public BookRent(int w, int h) {
 		init(w, h);

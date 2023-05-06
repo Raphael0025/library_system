@@ -77,11 +77,36 @@ public class SQLapi {
     			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
                 ps = con.prepareStatement(sql);
                 rs = ps.executeQuery();
+                
+                while(rs.next()) {
+					 rs1 = rs.getString(1);
+					 rs2 = rs.getString(2);
+					 rs3 = rs.getString(3);
+					 rs4 = rs.getString(4);
+					 rs5 = rs.getString(5);
+					 rs6 = rs.getString(6);
+					 rs7 = rs.getString(7);
+	            }
+	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7};
+	            return arr;
     		}else if(tbl.equals("booksissued")) {
     			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `issue_id` LIKE '%").concat(id).concat("%' OR `book_id` LIKE '%").concat(id).concat("%' OR `member_name` LIKE '%").concat(id).concat("%';");
     			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
                 ps = con.prepareStatement(sql);
                 rs = ps.executeQuery();
+                
+                while(rs.next()) {
+					 rs1 = rs.getString(1);
+					 rs2 = rs.getString(2);
+					 rs3 = rs.getString(3);
+					 rs4 = rs.getString(4);
+					 rs5 = rs.getString(5);
+					 rs6 = rs.getString(6);
+					 rs7 = rs.getString(7);
+					 rs8 = rs.getString(8);
+	            }
+	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7, rs8};
+	            return arr;
     		}else {
     			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `id` LIKE '%").concat(id).concat("%' OR `name` LIKE '%").concat(id).concat("%';");
     			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
@@ -257,8 +282,15 @@ public class SQLapi {
     public boolean verifyDuplicateID(String tbl, String pass) {
     	String sql;
     	boolean val;
+    	String id = "";
+    	if(tbl.equals("book"))
+    		id = "book_id";
+    	else if (tbl.equals("booksissued"))
+    		id = "issue_id";
+    	else
+    		id = "id";
     	try {
-    		sql = "SELECT `password` FROM `tbl_" + tbl + "` WHERE `password` LIKE '" + pass + "';";
+    		sql = "SELECT `" + id + "` FROM `tbl_" + tbl + "` WHERE `" + id + "` LIKE '" + pass + "';";
 			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();

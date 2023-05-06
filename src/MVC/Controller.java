@@ -30,6 +30,8 @@ public class Controller extends MyClass{
 	BookInfo bki;
 	SQLapi sql = new SQLapi();
 	DashResult dr = new DashResult();
+	PasswordGenerator pg = new PasswordGenerator();
+	IDGenerator ig = new IDGenerator();
 	
 	public String[] arr;
 	
@@ -72,7 +74,6 @@ public class Controller extends MyClass{
 	public void actionPerformed(ActionEvent e) {
 		JButton pressed = (JButton) e.getSource();
         String btn = pressed.getText();
-        
 		switch(btn) {
 			case "LOGIN" :
 				String user = lp.tf.getText();
@@ -204,21 +205,10 @@ public class Controller extends MyClass{
 					mr.del.addActionListener(this);
 					pf.add(mr);
 					
-					int y2 = 130;
 					for(int i = 0; i < mr.tf.length; i++) {
-						mr.tf[i] = new CustomTextField(20, arr[i], 10);
-						((CustomTextField)mr.tf[i]).setBounds(210, y2, 400, 30);
-						mr.tf[i].setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-						mr.tf[i].setFont(new Font("Open Sans", 1, 14));
-						mr.tf[i].setForeground(new Color(202, 2, 4));
-						y2+=40;
+						mr.tf[i].setText(arr[i]);
 					}
-					mr.tf[0].setEditable(false);
-					mr.tf[6].setEditable(false);
-					mr.tf[7].setEditable(false);
-					for(int i = 0; i < mr.tf.length; i++) {
-						mr.add(mr.tf[i]);
-					}
+					
 					sql.GetData("booksissued", mr.modelInfo, mr.tf[1].getText(), "modelInfo");
 				}
 					
@@ -228,6 +218,8 @@ public class Controller extends MyClass{
 				pf = new promptFrame("Book Rent", 600, 480);
 				pf.setVisible(true);
 				br = new BookRent(pf.getWidth(), pf.getHeight());
+				br.tf[0].setText(brud.tf[0].getText());
+				br.tf[1].setText(brud.tf[1].getText());
 				//br.edit.addActionListener(this);
 				pf.add(br);
 				
@@ -244,47 +236,53 @@ public class Controller extends MyClass{
 				
 				break;
 			case "Search Book":
-				pf = new promptFrame("Search Book", 600, 480);
-				pf.setVisible(true);
-				brud = new B_RUD(pf.getWidth(), pf.getHeight());
-				//brud.edit.addActionListener(this);
-				pf.add(brud);
-				brud.editB.addActionListener(this);
-				brud.issueB.addActionListener(this);
+				String[] arr2 = sql.SQLRead("book", bs.search.getText());
+				if(arr2[0] == null) {
+					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
+				} else {
+					pf = new promptFrame("Search Book", 600, 480);
+					pf.setVisible(true);
+					brud = new B_RUD(pf.getWidth(), pf.getHeight());
+					pf.add(brud);
+					brud.editB.addActionListener(this);
+					brud.issueB.addActionListener(this);
+					brud.delB.addActionListener(this);
+					
+					brud.editB.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							brud.editB.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
+						}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							brud.editB.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
+						}
+					});
+					brud.issueB.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							brud.issueB.setIcon(new ImageIcon("src\\assets\\red-openbook.png"));
+						}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							brud.issueB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
+						}
+					});
+					brud.delB.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							brud.delB.setIcon(new ImageIcon("src\\assets\\red-del.png"));
+						}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							brud.delB.setIcon(new ImageIcon("src\\assets\\white-del.png"));
+						}
+					});
 				
-				brud.editB.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						brud.editB.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
+					for(int i = 0; i < brud.tf.length; i++) {
+						brud.tf[i].setText(arr2[i]);
 					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						brud.editB.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
-					}
-				});
-				
-				brud.issueB.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						brud.issueB.setIcon(new ImageIcon("src\\assets\\red-openbook.png"));
-					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						brud.issueB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
-					}
-				});
-				
-				brud.delB.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						brud.delB.setIcon(new ImageIcon("src\\assets\\red-del.png"));
-					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						brud.delB.setIcon(new ImageIcon("src\\assets\\white-del.png"));
-					}
-				});
-				
+				}
 				break;
 				
 			case "Add New Member":
@@ -306,7 +304,7 @@ public class Controller extends MyClass{
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						sql.SQLCreate("member", nmr.tf[7].getText(), nmr.tf[0].getText(), nmr.tf[1].getText(), nmr.tf[3].getText(), nmr.tf[2].getText(), nmr.tf[4].getText(), nmr.tf[5].getText(), nmr.tf[6].getText(), m_list.model);
-				
+						pf.dispose();
 					}
 				});
 				
@@ -326,6 +324,16 @@ public class Controller extends MyClass{
 						nbr.adb.setIcon(new ImageIcon("src\\assets\\white-book.png"));
 					}
 				});
+				nbr.adb.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String id = ig.generator("book");
+						sql.SQLCreate("book", id, nbr.tf[0].getText(), nbr.tf[1].getText(), nbr.tf[2].getText(), nbr.tf[3].getText(), nbr.tf[4].getText(), nbr.tf[5].getText(), null, bs.model);
+						
+						pf.dispose();
+					}
+				});
+				
 				
 				pf.add(nbr);
 				break;
@@ -336,30 +344,39 @@ public class Controller extends MyClass{
 				pg.generator("member");
 				ig.generator("member");
 				String p = pg.GetPassword();
-				String id = ig.GetID();
+				String id = ig.generator("member");
 				
 				nmr.tf[6].setText(p);
 				nmr.tf[7].setText(id);
-				System.out.println(id + " " + p);
 				break;
 			case "Edit Book":
 				JOptionPane.showMessageDialog(null, "Oks");
 				break;
 			case "Search Issued Book":
-				pf = new promptFrame("New Book", 600, 520);
-				pf.setVisible(true);
-				vib = new ViewIssuedBook(pf.getWidth(), pf.getHeight());
-				vib.returnB.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						vib.returnB.setIcon(new ImageIcon("src\\assets\\red-book.png"));
+				String[] arr3 = sql.SQLRead("booksissued", ib.search.getText());
+				if(arr3[0] == null) {
+					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
+				} else {
+					pf = new promptFrame("New Book", 600, 520);
+					pf.setVisible(true);
+					vib = new ViewIssuedBook(pf.getWidth(), pf.getHeight());
+					vib.returnB.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							vib.returnB.setIcon(new ImageIcon("src\\assets\\red-book.png"));
+						}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							vib.returnB.setIcon(new ImageIcon("src\\assets\\white-book.png"));
+						}
+					});
+					pf.add(vib);
+
+					for(int i = 0; i < vib.tf.length; i++) {
+						vib.tf[i].setText(arr3[i]);
 					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						vib.returnB.setIcon(new ImageIcon("src\\assets\\white-book.png"));
-					}
-				});
-				pf.add(vib);
+				}
+				
 				break;
 			case "SEARCH":
 				pf = new promptFrame("Search Book", 600,  370);

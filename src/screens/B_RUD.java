@@ -11,7 +11,7 @@ public class B_RUD extends AguaComponents{
 	public JButton editB = new RoundedButton("Edit Book");
 	public JButton delB = new RoundedButton("Delete Book");
 	JLabel[] labels = new JLabel[7];
-	JTextField[] tf = new JTextField[7];
+	public JTextField[] tf = new JTextField[7];
 	String[] txt = {"Book ID", "Book Type", "Book Title", "Author(s)", "Publication Date", "Shelf No.", "Book Status"};
 	
 	public B_RUD(int w, int h) {
@@ -61,6 +61,7 @@ public class B_RUD extends AguaComponents{
 			y2+=40;
 		}
 		tf[6].setEditable(false);
+		tf[0].setEditable(false);
 
 		for(int i = 0; i < labels.length; i++) {
 			this.add(labels[i]);

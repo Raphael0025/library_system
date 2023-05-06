@@ -49,6 +49,22 @@ public class M_RUD extends AguaComponents{
 		Default(del, "del");
 		del.setFont(new Font("Open Sans", 1, 20));
 		
+		int y2 = 130;
+		for(int i = 0; i < tf.length; i++) {
+			tf[i] = new CustomTextField(20, "", 10);
+			((CustomTextField)tf[i]).setBounds(210, y2, 400, 30);
+			tf[i].setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+			tf[i].setFont(new Font("Open Sans", 1, 14));
+			tf[i].setForeground(new Color(202, 2, 4));
+			y2+=40;
+		}
+		tf[0].setEditable(false);
+		tf[6].setEditable(false);
+		tf[7].setEditable(false);
+		for(int i = 0; i < tf.length; i++) {
+			add(tf[i]);
+		}
+		
 		int y = 130;
 		for(int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel(txt[i].concat(":"));
