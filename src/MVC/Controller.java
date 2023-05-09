@@ -3,10 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.*;
 import java.util.*;
+import java.util.Date;
+
 import javax.swing.*;
 import custom.*; 
 import api_service.*;
 import screens.*;
+import java.text.*;
+import java.time.*;
 
 @SuppressWarnings("serial")
 public class Controller extends MyClass{
@@ -32,8 +36,9 @@ public class Controller extends MyClass{
 	DashResult dr = new DashResult();
 	PasswordGenerator pg = new PasswordGenerator();
 	IDGenerator ig = new IDGenerator();
-	
+	CustomTextField ctf = new CustomTextField();
 	public String[] arr;
+	String globeID;
 	
 	public Controller(mainApp mp, MemberDashboard memberDash, UserProfile up, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList, bookShelf bs, issuedBook ib){
 		this.mp = mp;
@@ -79,6 +84,7 @@ public class Controller extends MyClass{
 				String user = lp.tf.getText();
 				@SuppressWarnings("deprecation") 
 				String pass = lp.pf.getText();
+				this.globeID = user;
 				
 				if(lp.admin) {
 					if(sql.SQLAccount("employees", user, pass)) {
@@ -86,7 +92,11 @@ public class Controller extends MyClass{
 						mp.setLocationRelativeTo(null);
 						lp.setVisible(false);
 						tb.setVisible(true);
-						tb.Title("ADMIN");
+						if(globeID.equals("admin")) {
+							tb.Title("ADMIN");
+						} else {
+							tb.Title("STAFF");
+						}
 						mp.setTitle("Library Management - Dashboard(ADMIN)");
 						DashCont();
 						
@@ -190,7 +200,18 @@ public class Controller extends MyClass{
 				
 				break;
 			case "Edit":
-				JOptionPane.showMessageDialog(null, mr.tf[0].getText(), "Input Error", JOptionPane.ERROR_MESSAGE);
+				String id2 = mr.tf[0].getText();
+				String[] temp = new String[7];
+				for(int i = 0; i < temp.length; i++) {
+					temp[i] = mr.tf[i+1].getText();
+				}
+				sql.SQLUpdate("member", id2, temp, m_list.model);
+				break;
+			case "Delete":
+				String id3 = mr.tf[0].getText();
+				sql.SQLDelete("member", id3, m_list.model);
+				pf.dispose();
+				
 				break;
 			case "Search Member":
 				String[] arr = sql.SQLRead("member", m_list.search.getText());
@@ -207,6 +228,7 @@ public class Controller extends MyClass{
 					
 					for(int i = 0; i < mr.tf.length; i++) {
 						mr.tf[i].setText(arr[i]);
+						ctf.placeHolder(mr.tf[i], arr[i]);
 					}
 					
 					sql.GetData("booksissued", mr.modelInfo, mr.tf[1].getText(), "modelInfo");
@@ -214,13 +236,27 @@ public class Controller extends MyClass{
 					
 				break;
 			case "Issue this Book":
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+				Date dt;
 				pf.dispose();
 				pf = new promptFrame("Book Rent", 600, 480);
 				pf.setVisible(true);
 				br = new BookRent(pf.getWidth(), pf.getHeight());
-				br.tf[0].setText(brud.tf[0].getText());
-				br.tf[1].setText(brud.tf[2].getText());
-
+				
+				String cnvrt_date;
+				try {
+					dt = formatter.parse(LocalDate.now().toString());
+					cnvrt_date = formatter.format(dt);
+					
+					br.tf[0].setText(brud.tf[0].getText());
+					br.tf[1].setText(brud.tf[2].getText());
+					br.tf[3].setText(cnvrt_date);
+					
+					ctf.placeHolder(br.tf[0], brud.tf[0].getText());
+					ctf.placeHolder(br.tf[1], brud.tf[1].getText());
+					ctf.placeHolder(br.tf[3], cnvrt_date);
+				} catch (ParseException e2) {}
+				
 				pf.add(br);
 				
 				br.issB.addMouseListener(new MouseAdapter() {
@@ -237,6 +273,9 @@ public class Controller extends MyClass{
 				
 				break;
 			case "Issue Book":
+				SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd"); 
+				Date date1, date2;
+				
 				if(sql.verifyMember(br.tf[2].getText())) {
 					int att = 0;
 					String id = ig.generator("booksissued");
@@ -246,10 +285,20 @@ public class Controller extends MyClass{
 						}
 					}
 					if(att==0) {
-						sql.setBookStatus("book", "unavailable", br.tf[0].getText(), bs.model);
-						sql.SQLCreate("booksissued", id, br.tf[0].getText(), br.tf[1].getText(), br.tf[2].getText(), br.tf[3].getText(), br.tf[4].getText(), br.tf[5].getText(), "not returned", ib.model);
-						
-						pf.dispose();
+						try {
+							date1 = formatter1.parse(br.tf[3].getText());
+							date2 = formatter1.parse(br.tf[4].getText());  
+							if(date1.after(date2)) {
+								JOptionPane.showMessageDialog(null, "Return Date must not be earlier than Issued Date", "Alert 204!", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Date Format must be (yyyy-mm-dd)", "Reminder!", JOptionPane.INFORMATION_MESSAGE);
+							}else {
+								sql.SQLCreate("booksissued", id, br.tf[0].getText(), br.tf[1].getText(), br.tf[2].getText(), br.tf[3].getText(), br.tf[4].getText(), br.tf[5].getText(), "not returned", ib.model);
+								sql.setBookStatus("book", "unavailable", br.tf[0].getText(), bs.model);
+								pf.dispose();
+							}
+						} catch (ParseException e1) {
+							JOptionPane.showMessageDialog(null, "Input Valid Dates!", "Alert 404!", JOptionPane.ERROR_MESSAGE);
+						}  
 						att = 0;
 					}else {
 						JOptionPane.showMessageDialog(null, "Please fill out details!", "Alert!", JOptionPane.ERROR_MESSAGE);
@@ -305,6 +354,7 @@ public class Controller extends MyClass{
 				
 					for(int i = 0; i < brud.tf.length; i++) {
 						brud.tf[i].setText(arr2[i]);
+						ctf.placeHolder(brud.tf[i], arr2[i]);
 					}
 					if(brud.tf[6].getText().equals("unavailable")) {
 						brud.issueB.setVisible(false);
@@ -361,7 +411,6 @@ public class Controller extends MyClass{
 					}
 				});
 				
-				
 				pf.add(nbr);
 				break;
 			case "GENERATE":
@@ -377,7 +426,18 @@ public class Controller extends MyClass{
 				nmr.tf[7].setText(id);
 				break;
 			case "Edit Book":
-				JOptionPane.showMessageDialog(null, "Oks");
+				String id4 = brud.tf[0].getText();
+				String[] temp2 = new String[6];
+				for(int i = 0; i < temp2.length; i++) {
+					temp2[i] = brud.tf[i+1].getText();
+				}
+				sql.SQLUpdate("book", id4, temp2, bs.model);
+				
+				break;
+			case "Delete Book":
+				String id5 = brud.tf[0].getText();
+				sql.SQLDelete("book", id5, bs.model);
+				pf.dispose();
 				break;
 			case "Search Issued Book":
 				String[] arr3 = sql.SQLRead("booksissued", ib.search.getText());
@@ -387,6 +447,12 @@ public class Controller extends MyClass{
 					pf = new promptFrame("Issued Book", 600, 520);
 					pf.setVisible(true);
 					vib = new ViewIssuedBook(pf.getWidth(), pf.getHeight());
+					if(arr3[7].equals("returned")) {
+						vib.returnB.setVisible(false);
+						for(JTextField tf: vib.tf) {
+							tf.setFocusable(false);
+						}
+					}
 					vib.returnB.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseEntered(MouseEvent e) {
@@ -402,6 +468,7 @@ public class Controller extends MyClass{
 					
 					for(int i = 0; i < vib.tf.length; i++) {
 						vib.tf[i].setText(arr3[i]);
+						ctf.placeHolder(vib.tf[i], arr3[i]);
 					}
 				}
 				
@@ -417,6 +484,19 @@ public class Controller extends MyClass{
 				pf.setVisible(true);
 				bki= new BookInfo(pf.getWidth(), pf.getHeight());
 				pf.add(bki);
+				break;
+			case "Edit Staff":
+				String id6 = up.tf[0].getText();
+				String[] temp3 = new String[7];
+				for(int i = 0; i < temp3.length; i++) {
+					temp3[i] = up.tf[i+1].getText();
+				}
+				sql.SQLUpdate("employees", id6, temp3, m_list.model);
+				
+				break;
+			case "Delete Staff":
+				String id7 = up.tf[0].getText();
+				sql.SQLDelete("employees", id7, m_list.model);
 				break;
 		}
 	}
@@ -443,12 +523,24 @@ public class Controller extends MyClass{
 			dashB.setVisible(false);
 			m_list.setVisible(false);
 			bs.setVisible(false);
+			
+			up.modify.addActionListener(this);
+			up.delS.addActionListener(this);
+			
+			String[] arr;
 			if(lp.admin) {
 				up.setBounds(150, 70, 1120, 630, 20);
 				up.scrollTable.setVisible(false);
+				arr = (tb.name.getText().equals("STAFF") || tb.name.getText().equals("ADMIN")) ? sql.SQLRead("employees",globeID) : null;
+				
 			} else {
 				up.setBounds(10, 70, 1260, 630, 20);
 				up.scrollTable.setVisible(true);
+				arr = sql.SQLRead("member",globeID);
+			}
+			for(int i = 0; i < up.tf.length; i++) {
+				up.tf[i].setText(arr[i]);
+				ctf.placeHolder(up.tf[i], arr[i]);
 			}
 		} 
 		else if (e.getSource() == tb.home) {

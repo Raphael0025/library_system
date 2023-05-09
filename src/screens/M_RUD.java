@@ -15,7 +15,7 @@ public class M_RUD extends AguaComponents{
 	public JTextField[] tf = new JTextField[8];
 
 	String[] column = {"Books Issued","Issued Date", "Returned Date", "Return Status"};
-	String[] txt = {"Member ID", "Name", "Member Type", "Address", "Age", "Contact No.", "Email Address", "Password"};
+	String[] txt = {"Member ID", "Name", "Member Type", "Age", "Address", "Contact No.", "Email Address", "Password"};
     public DefaultTableModel modelInfo = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
     public JTable table = new JTable(modelInfo){
@@ -59,6 +59,7 @@ public class M_RUD extends AguaComponents{
 			y2+=40;
 		}
 		tf[0].setEditable(false);
+		tf[0].setEnabled(false);
 		tf[6].setEditable(false);
 		tf[7].setEditable(false);
 		for(int i = 0; i < tf.length; i++) {

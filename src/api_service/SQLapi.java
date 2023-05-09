@@ -87,7 +87,7 @@ public class SQLapi {
 					 rs6 = rs.getString(6);
 					 rs7 = rs.getString(7);
 	            }
-	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7};
+	            arr = new String[]{rs1, rs2, rs3, rs4, rs5,rs6, rs7};
 	            return arr;
     		}else if(tbl.equals("booksissued")) {
     			sql = "SELECT * FROM `tbl_".concat(tbl).concat("` WHERE `issue_id` LIKE '%").concat(id).concat("%' OR `book_id` LIKE '%").concat(id).concat("%' OR `book_title` LIKE '%").concat(id).concat("%' OR `member_name` LIKE '%").concat(id).concat("%';");
@@ -123,7 +123,7 @@ public class SQLapi {
 					 rs7 = rs.getString(7);
 					 rs8 = rs.getString(8);
 	            }
-	            arr = new String[]{rs1, rs2, rs3, rs5, rs4,rs6, rs7, rs8};
+	            arr = new String[]{rs1, rs2, rs3, rs4, rs5,rs6, rs7, rs8};
 	            return arr;
     		}
     		
@@ -138,40 +138,47 @@ public class SQLapi {
             con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
             st = con.createStatement();
             if(tbl.equals("book")) {
-            	query = "UPDATE `tbl_".concat(tbl).concat("` SET `book_type`='").concat(arr[0]).concat("',`title`='").concat(arr[1]).concat("',`author`=").concat(arr[2]).concat("',`published_date`=").concat(arr[3]).concat("',`shelf_num`=").concat(arr[4]).concat("',`status`=").concat(arr[5]).concat(" WHERE `book_id` = ").concat(id);
+            	query = "UPDATE `tbl_".concat(tbl).concat("` SET `book_type`='").concat(arr[0]).concat("',`title`='").concat(arr[1]).concat("',`author`='").concat(arr[2]).concat("',`published_date`='").concat(arr[3]).concat("',`shelf_num`='").concat(arr[4]).concat("',`status`='").concat(arr[5]).concat("' WHERE `book_id` = '").concat(id).concat("'");
             
             }else if(tbl.equals("booksissued")) {
-            	query = "UPDATE `tbl_".concat(tbl).concat("` SET `book_id`='").concat(arr[0]).concat("',`book_title`='").concat(arr[1]).concat("',`member_name`=").concat(arr[2]).concat("',`issue_date`=").concat(arr[3]).concat("',`return_date`=").concat(arr[4]).concat("',`fine_fee`=").concat(arr[5]).concat("',`status`=").concat(arr[6]).concat(" WHERE `issue_id` = ").concat(id);
+            	query = "UPDATE `tbl_".concat(tbl).concat("` SET `book_id`='").concat(arr[0]).concat("',`book_title`='").concat(arr[1]).concat("',`member_name`='").concat(arr[2]).concat("',`issue_date`='").concat(arr[3]).concat("',`return_date`='").concat(arr[4]).concat("',`fine_fee`='").concat(arr[5]).concat("',`status`='").concat(arr[6]).concat("' WHERE `issue_id` = '").concat(id).concat("';");;
                 
             }else {
-            	query = "UPDATE `tbl_".concat(tbl).concat("` SET `name`='").concat(arr[0]).concat("',`type`='").concat(arr[1]).concat("',`age`=").concat(arr[2]).concat("',`address`=").concat(arr[3]).concat("',`mobile_no`=").concat(arr[4]).concat("',`email`=").concat(arr[5]).concat("',`password`=").concat(arr[6]).concat(" WHERE `id` = ").concat(id);
+            	query = "UPDATE `tbl_".concat(tbl).concat("` SET `name`='").concat(arr[0]).concat("',`type`='").concat(arr[1]).concat("',`age`='").concat(arr[2]).concat("',`address`='").concat(arr[3]).concat("',`mobile_no`='").concat(arr[4]).concat("',`e-mail`='").concat(arr[5]).concat("',`password`='").concat(arr[6]).concat("' WHERE `id` LIKE '%").concat(id).concat("%';");
                 
             }
             if((st.executeUpdate(query)) == 1)
             {
                 JOptionPane.showMessageDialog(null, "Record Updated Successfully");
+                GetData(tbl, dtm, "", "");
             }else{
                 JOptionPane.showMessageDialog(null, "Record Update Unsuccessful");
             }
-            GetData(tbl, dtm, "", "");
-        }catch(SQLException e){}
+        }catch(SQLException e){
+        	System.out.println(e);
+        }
     }
     
     public void SQLDelete(String tbl, String _id, DefaultTableModel dtm) {
     	String sql;
     	try{
     		if(tbl.equals("book")) {
-    			sql = "DELETE FROM `".concat(tbl).concat("` WHERE `book_id` = ?");
+    			sql = "DELETE FROM `tbl_".concat(tbl).concat("` WHERE `book_id` = '").concat(_id).concat("';");
     		} else {
-    			sql = "DELETE FROM `".concat(tbl).concat("` WHERE `id` = ?");
+    			sql = "DELETE FROM `tbl_".concat(tbl).concat("` WHERE `id` = '").concat(_id).concat("';");
     		}
             con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
             ps = con.prepareStatement(sql);
 
-            ps.setString(1, _id);
-            ps.executeUpdate();
-
-            JOptionPane.showMessageDialog(null, "Successfully Deleted Records!");
+            int res = JOptionPane.showConfirmDialog(null, "Do you want to proceed?", "Select an Option...", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+            
+            if(res == JOptionPane.YES_OPTION) {
+            	ps.executeUpdate();
+            	JOptionPane.showMessageDialog(null, "Successfully Deleted From Records!", "Prompt!", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+            	JOptionPane.showMessageDialog(null, "Record Deletion Cancelled!", "Prompt!", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
             GetData(tbl, dtm, "", "");
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, e);
@@ -265,7 +272,8 @@ public class SQLapi {
                     String _3 = rs.getString(3);
                     String _5 = rs.getString(5);
                     String _6 = rs.getString(6);
-                	dtm.addRow(new Object[]{_1, _3, _2, _5, _6});
+                    String _7 = rs.getString(7);
+                	dtm.addRow(new Object[]{_1, _3, _2, _5, _6, _7});
                 }
             }
            
@@ -381,7 +389,7 @@ public class SQLapi {
     
     public int getLateBooks() {
     	try {
-    		String sql = "SELECT COUNT(*) FROM `tbl_booksissued` WHERE status LIKE 'over due';";
+    		String sql = "SELECT COUNT(*) FROM `tbl_booksissued` WHERE `status` LIKE '%not returned%' AND `return_date` < NOW();";
 			con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();

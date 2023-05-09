@@ -7,6 +7,9 @@ import java.awt.event.*;
 public class CustomTextField extends JTextField{
 	//private Shape shape;
 	private int arc;
+	public CustomTextField() {
+		//
+	}
 	public CustomTextField(int size, String ph, int arc) {
 		super(size);
 		setOpaque(false);

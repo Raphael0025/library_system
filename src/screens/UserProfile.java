@@ -11,7 +11,7 @@ public class UserProfile extends AguaComponents{
 	public JLabel title = new JLabel("USER PROFILE");
 	public JButton modify = new RoundedButton("Edit Staff");
 	public JButton delS = new RoundedButton("Delete Staff");
-	String[] txt = {"ID", "Name", "Type", "Age","Address", "Contact", "Email", "Password"};
+	public String[] txt = {"ID", "Name", "Type", "Age","Address", "Contact", "Email", "Password"};
 	JLabel[] labels = new JLabel[txt.length];
 	public JTextField[] tf = new JTextField[txt.length];
 
@@ -106,7 +106,6 @@ public class UserProfile extends AguaComponents{
 				delS.setIcon(new ImageIcon("src\\assets\\white-del.png"));
 			}
 		});
-		
 		for(int i = 0; i < labels.length; i++) {
 			this.add(labels[i]);
 		}

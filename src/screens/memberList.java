@@ -12,7 +12,7 @@ public class memberList extends AguaComponents{
 	public JButton query = new RoundedButton("Search Member");
 	public JButton addMember = new RoundedButton("Add New Member");
 	
-	String[] column = {"Member ID","Member Type", "Member Name", "Email", "Contact"};
+	String[] column = {"Member ID","Member Type", "Member Name", "Address", "Contact", "Email"};
     public DefaultTableModel model = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
     JTable table = new JTable(model){
