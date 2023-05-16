@@ -1,8 +1,12 @@
 package screens;
 import javax.swing.*; 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import custom.*;
 import javax.swing.table.*;
+import api_service.SQLapi;
 
 @SuppressWarnings("serial")
 public class bookShelf extends AguaComponents{
@@ -22,6 +26,9 @@ public class bookShelf extends AguaComponents{
         }
     };
     public JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+    Timer time;
+    SQLapi api = new SQLapi();
+    int row;
     
 	public bookShelf() {
 		init();
@@ -49,6 +56,8 @@ public class bookShelf extends AguaComponents{
             table.getColumnModel().getColumn(i).setCellRenderer(render);
         }
         
+        row = model.getRowCount();
+        
         title.setBounds(30,0,250,80);
 		title.setFont(new Font("Open Sans", 1, 36));
 		title.setForeground(Color.white);
@@ -70,12 +79,14 @@ public class bookShelf extends AguaComponents{
 		((RoundedButton)addB).setFore(255, 255, 255, 255, 0, 0);
 		addB.setFont(new Font("Open Sans", 1, 18));
 		
-		//model.addRow(new Object[]{"1", "2", "3", "4"});
-		
 		this.add(scrollTable);
 		this.add(addB);
 		this.add(query);
 		this.add(search);
 		this.add(title);
+	}
+	
+	public void update() {
+		api.GetData("book", model, "", "");  
 	}
 }

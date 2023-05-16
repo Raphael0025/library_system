@@ -19,6 +19,9 @@ public class IDGenerator {
 		else if(entity.equals("member")) {
 			idd = "UEP-".concat(sb.toString());
 		}
+		else if(entity.equals("employees")) {
+			idd = "UEPS-".concat(sb.toString());
+		}
 		else if(entity.equals("booksissued")) {
 			idd = "IID".concat(sb.toString());
 		}

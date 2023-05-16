@@ -1,21 +1,21 @@
 package screens;
 import javax.swing.*; 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 import custom.*;
 import javax.swing.table.*;
-import api_service.SQLapi;
+import api_service.*;
 
 @SuppressWarnings("serial")
-public class issuedBook extends AguaComponents{
-	
-	public JLabel title = new JLabel("Book List");
-	public JTextField search = new CustomTextField(20, "Search", 20);
-	public JButton query = new RoundedButton("Search Issued Book");
+public class EmployeeList extends AguaComponents{
 
-	String[] column = {"Issued ID", "Book Title", "Member Name", "Issued Date", "Returned Date", "Date Returned"};
+	public JLabel title = new JLabel("Employee List");
+	public JTextField search = new CustomTextField(20, "Search", 20);
+	public JButton query = new RoundedButton("Search Staff");
+	public JButton addStaff = new RoundedButton("Add New Staff");
+	
+	String[] column = {"Staff ID","Role", "Staff Name", "Address", "Contact", "Email"};
     public DefaultTableModel model = new DefaultTableModel();
     DefaultTableCellRenderer render = new DefaultTableCellRenderer();
     JTable table = new JTable(model){
@@ -25,11 +25,8 @@ public class issuedBook extends AguaComponents{
         }
     };
     public JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
-    Timer time;
-    SQLapi api = new SQLapi();
-    int row; 
     
-	public issuedBook() {
+	public EmployeeList() {
 		init();
 	}
 	
@@ -38,7 +35,7 @@ public class issuedBook extends AguaComponents{
 		setVisible(false);
 		setBounds(150, 70, 1120, 630, 20);
 		setColor(219,105,108, 255);
-
+		
 		//JTable
         for (String column1 : column) {
             model.addColumn(column1);
@@ -54,9 +51,7 @@ public class issuedBook extends AguaComponents{
         for( int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(render);
         }
-        row = model.getRowCount();
-        
-        title.setBounds(30,0,250,80);
+		title.setBounds(30,0,250,80);
 		title.setFont(new Font("Open Sans", 1, 36));
 		title.setForeground(Color.white);
 		
@@ -65,21 +60,23 @@ public class issuedBook extends AguaComponents{
 		search.setFont(new Font("Open Sans", 1, 18));
 		search.setForeground(new Color(202, 2, 4));
 		
-		((RoundedButton)query).setBounds(420, 140, 210, 40);
+		((RoundedButton)query).setBounds(420, 140, 170, 40);
 		((RoundedButton)query).setFill(233, 62, 62, 255, 255, 255);
 		((RoundedButton)query).setBorder(233, 62, 62, 255, 255, 255);
 		((RoundedButton)query).setFore(255, 255, 255, 255, 0, 0);
 		query.setFont(new Font("Open Sans", 1, 18));
 		
+		((RoundedButton)addStaff).setBounds(890, 140, 170, 40);
+		((RoundedButton)addStaff).setFill(233, 62, 62, 255, 255, 255);
+		((RoundedButton)addStaff).setBorder(233, 62, 62, 255, 255, 255);
+		((RoundedButton)addStaff).setFore(255, 255, 255, 255, 0, 0);
+		addStaff.setFont(new Font("Open Sans", 1, 18));
+		
 		this.add(scrollTable);
+		this.add(addStaff);
 		this.add(query);
 		this.add(search);
 		this.add(title);
 		
-	}
-	
-	public void update() {
-		api.GetData("booksissued", model, "", "");  
-	}
+	}   
 }
-

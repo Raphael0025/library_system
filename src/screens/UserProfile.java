@@ -10,6 +10,7 @@ public class UserProfile extends AguaComponents{
 	
 	public JLabel title = new JLabel("USER PROFILE");
 	public JButton modify = new RoundedButton("Edit Staff");
+	public JButton modify2 = new RoundedButton("Edit Details");
 	public JButton delS = new RoundedButton("Delete Staff");
 	public String[] txt = {"ID", "Name", "Type", "Age","Address", "Contact", "Email", "Password"};
 	JLabel[] labels = new JLabel[txt.length];
@@ -80,6 +81,11 @@ public class UserProfile extends AguaComponents{
 		Default(modify, "edit");
 		modify.setFont(new Font("Open Sans", 1, 20));
 		
+		((RoundedButton)modify2).setBounds(30, 550, 160, 40);
+		((RoundedButton)modify2).setArc(20);
+		Default(modify2, "edit");
+		modify2.setFont(new Font("Open Sans", 1, 20));
+		
 		((RoundedButton)delS).setBounds(200, 550, 180, 40);
 		((RoundedButton)delS).setArc(20);
 		Default(delS, "del");
@@ -93,6 +99,17 @@ public class UserProfile extends AguaComponents{
 			@Override
 			public void mouseExited(MouseEvent e) {
 				modify.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
+			}
+		});
+		
+		modify2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				modify2.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				modify2.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
 			}
 		});
 		
@@ -112,10 +129,11 @@ public class UserProfile extends AguaComponents{
         for(int i = 0; i < tf.length; i++) {
 			this.add(tf[i]);
 		}
-		
+		modify2.setVisible(false);
         this.add(scrollTable);
         this.add(delS);
         this.add(modify);
+        this.add(modify2);
 		this.add(title);
 	}
 	

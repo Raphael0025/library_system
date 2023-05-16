@@ -3,11 +3,14 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import screens.*;
+
 public class SQLapi {
 	private Connection con = null;
     private Statement st = null;
     private PreparedStatement ps = null;
     private ResultSet rs = null;
+    EmployeeList empl = new EmployeeList();
     
     public boolean SQLAccount(String tbl, String id, String pass) {
     	String sql;
@@ -60,9 +63,8 @@ public class SQLapi {
             	ps.setString(8, _8th);
             
             ps.execute();
-
-            JOptionPane.showMessageDialog(null, "Successfully Inserted");
             GetData(tbl, dtm, "", "");
+            JOptionPane.showMessageDialog(null, "Successfully Inserted");
     	}catch(SQLException e) {
     		System.out.println(e);
     	}
@@ -147,16 +149,16 @@ public class SQLapi {
             	query = "UPDATE `tbl_".concat(tbl).concat("` SET `name`='").concat(arr[0]).concat("',`type`='").concat(arr[1]).concat("',`age`='").concat(arr[2]).concat("',`address`='").concat(arr[3]).concat("',`mobile_no`='").concat(arr[4]).concat("',`e-mail`='").concat(arr[5]).concat("',`password`='").concat(arr[6]).concat("' WHERE `id` LIKE '%").concat(id).concat("%';");
                 
             }
-            if((st.executeUpdate(query)) == 1)
-            {
+            if((st.executeUpdate(query)) == 1){
                 JOptionPane.showMessageDialog(null, "Record Updated Successfully");
-                GetData(tbl, dtm, "", "");
             }else{
                 JOptionPane.showMessageDialog(null, "Record Update Unsuccessful");
             }
+            
         }catch(SQLException e){
         	System.out.println(e);
         }
+    	GetData(tbl, dtm, "", "");
     }
     
     public void SQLDelete(String tbl, String _id, DefaultTableModel dtm) {
@@ -275,6 +277,7 @@ public class SQLapi {
                     String _7 = rs.getString(7);
                 	dtm.addRow(new Object[]{_1, _3, _2, _5, _6, _7});
                 }
+            	
             }
            
         }catch(SQLException e){

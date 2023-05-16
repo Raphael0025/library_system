@@ -9,9 +9,10 @@ public class sideBar extends AguaComponents{
 	public JLabel logo = new JLabel(new ImageIcon("src\\assets\\uep_logo.png"));
 	public JButton dash = new RoundedButton("DASHBOARD");
 	public JButton member = new RoundedButton("MEMBERS");
+	public JButton empl = new RoundedButton("EMPLOYEES");
 	public JButton books = new RoundedButton("BOOK SHELF");
 	public JButton issued = new RoundedButton("ISSUED");
-	public JPanel menu = new JPanel(new GridLayout(4, 1));
+	public JPanel menu = new JPanel(new GridLayout(5, 1));
 	
 	public sideBar() {
 		init();
@@ -28,21 +29,25 @@ public class sideBar extends AguaComponents{
 		member.setHorizontalAlignment(SwingConstants.LEFT);
 		books.setHorizontalAlignment(SwingConstants.LEFT);
 		issued.setHorizontalAlignment(SwingConstants.LEFT);
+		empl.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		dash.setFont(new Font("Open Sans", 1, 9));
 		member.setFont(new Font("Open Sans", 1, 9));
 		books.setFont(new Font("Open Sans", 1, 9));
 		issued.setFont(new Font("Open Sans", 1, 9));
+		empl.setFont(new Font("Open Sans", 1, 9));
 		
 		dash.setPreferredSize(new Dimension(130, 50));
 		member.setPreferredSize(new Dimension(130, 50));
 		books.setPreferredSize(new Dimension(130, 50));
 		issued.setPreferredSize(new Dimension(130, 50));
+		empl.setPreferredSize(new Dimension(130, 50));
 		
 		active(dash, "dash");
-		Default(member, "members");
+		Default(member, "member");
 		Default(books, "shelf");
 		Default(issued, "book");
+		Default(empl, "employee");
 		
 		menu.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
 		menu.setOpaque(false);
@@ -50,6 +55,7 @@ public class sideBar extends AguaComponents{
 		this.add(menu);
 		menu.add(dash);
 		menu.add(member);
+		menu.add(empl);
 		menu.add(books);
 		menu.add(issued);
 	}

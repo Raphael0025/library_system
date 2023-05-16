@@ -1,5 +1,6 @@
 package MVC;
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.awt.font.*;
 import java.util.*;
@@ -25,8 +26,10 @@ public class Controller extends MyClass{
 	promptFrame pf;
 	M_RUD mr;
 	NewMemberRecord nmr;
+	NewStaff ns;
 	NewBookRecord nbr;
 	B_RUD brud;
+	E_RUD erd;
 	BookRent br;
 	ViewIssuedBook vib;
 	UserProfile up;
@@ -37,10 +40,11 @@ public class Controller extends MyClass{
 	PasswordGenerator pg = new PasswordGenerator();
 	IDGenerator ig = new IDGenerator();
 	CustomTextField ctf = new CustomTextField();
+	EmployeeList employee;
 	public String[] arr;
 	String globeID;
 	
-	public Controller(mainApp mp, MemberDashboard memberDash, UserProfile up, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList, bookShelf bs, issuedBook ib){
+	public Controller(mainApp mp, MemberDashboard memberDash, UserProfile up, login lp, Dashboard dash, topBar tBar, sideBar sb, memberList mbList, bookShelf bs, issuedBook ib, EmployeeList employee){
 		this.mp = mp;
 		this.lp = lp;
 		this.dashB = dash;
@@ -51,11 +55,13 @@ public class Controller extends MyClass{
 		this.md = memberDash;
 		this.ib = ib;
 		this.up = up;
+		this.employee = employee;
 		
 		lp.loginBtn.addActionListener(this);
 		sb.dash.addActionListener(this);
 		sb.member.addActionListener(this);
 		sb.books.addActionListener(this);
+		sb.empl.addActionListener(this);
 		sb.issued.addActionListener(this);
 		lp.member.addActionListener(this);
 		lp.staff.addActionListener(this);
@@ -65,14 +71,12 @@ public class Controller extends MyClass{
 		m_list.addMember.addActionListener(this);
 		bs.addB.addActionListener(this);
 		bs.query.addActionListener(this);
+		employee.addStaff.addActionListener(this);
+		employee.query.addActionListener(this);
 		ib.query.addActionListener(this);
 		tb.name.addMouseListener(this);
 		tb.home.addMouseListener(this);
 		md.query.addActionListener(this);
-		
-//		int len = dashB.def.length;
-//		arr = new String[len];
-//		arr = dashB.def;
 	}
 	
 	@Override
@@ -121,6 +125,8 @@ public class Controller extends MyClass{
 						JOptionPane.showMessageDialog(null, "Sorry Wrong Credentials", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
+				lp.tf.setText("Enter Staff ID");
+				lp.pf.setText("");
 				
 				break;
 			case "STAFF":
@@ -135,11 +141,13 @@ public class Controller extends MyClass{
 				break;
 			case "DASHBOARD":
 				sb.active(sb.dash, "dash");
-				sb.Default(sb.member, "members");
+				sb.Default(sb.member, "member");
+				sb.Default(sb.empl, "employee");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
 				dashB.setVisible(true);
 				m_list.setVisible(false);
+				employee.setVisible(false);
 				bs.setVisible(false);
 				ib.setVisible(false);
 				up.setVisible(false);
@@ -150,11 +158,13 @@ public class Controller extends MyClass{
 				break;
 			case "MEMBERS":
 				sb.Default(sb.dash, "dash");
-				sb.active(sb.member, "members");
+				sb.active(sb.member, "member");
+				sb.Default(sb.empl, "employee");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
 				m_list.setVisible(true);
 				dashB.setVisible(false);
+				employee.setVisible(false);
 				bs.setVisible(false);
 				ib.setVisible(false);
 				up.setVisible(false);
@@ -165,14 +175,35 @@ public class Controller extends MyClass{
 				sql.GetData("member", m_list.model, "", "");
 				
 				break;
+			case "EMPLOYEES":
+				sb.Default(sb.dash, "dash");
+				sb.Default(sb.member, "member");
+				sb.active(sb.empl, "employee");
+				sb.Default(sb.books, "shelf");
+				sb.Default(sb.issued, "book");
+				m_list.setVisible(false);
+				employee.setVisible(true);
+				dashB.setVisible(false);
+				bs.setVisible(false);
+				ib.setVisible(false);
+				up.setVisible(false);
+				employee.search.setText("Search");
+				for(int i = 0; i < up.tf.length; i++) {
+					up.tf[i].setText("");
+				}
+				sql.GetData("employees", employee.model, "", "");
+				
+				break;
 			case "BOOK SHELF":
 				sb.Default(sb.dash, "dash");
-				sb.Default(sb.member, "members");
+				sb.Default(sb.member, "member");
+				sb.Default(sb.empl, "employee");
 				sb.active(sb.books, "shelf");
 				sb.Default(sb.issued, "book");
 				bs.setVisible(true);
 				dashB.setVisible(false);
 				m_list.setVisible(false);
+				employee.setVisible(false);
 				ib.setVisible(false);
 				up.setVisible(false);
 				bs.search.setText("Search");
@@ -184,12 +215,14 @@ public class Controller extends MyClass{
 				break;
 			case "ISSUED":
 				sb.active(sb.issued, "book");
-				sb.Default(sb.member, "members");
+				sb.Default(sb.member, "member");
+				sb.Default(sb.empl, "employee");
 				sb.Default(sb.books, "shelf");
 				sb.Default(sb.dash, "dash");
 				ib.setVisible(true);
 				dashB.setVisible(false);
 				m_list.setVisible(false);
+				employee.setVisible(false);
 				bs.setVisible(false);
 				ib.search.setText("Search");
 				up.setVisible(false);
@@ -199,291 +232,90 @@ public class Controller extends MyClass{
 				sql.GetData("booksissued", ib.model, "", "");
 				
 				break;
-			case "Edit":
-				String id2 = mr.tf[0].getText();
-				String[] temp = new String[7];
-				for(int i = 0; i < temp.length; i++) {
-					temp[i] = mr.tf[i+1].getText();
-				}
-				sql.SQLUpdate("member", id2, temp, m_list.model);
-				break;
-			case "Delete":
-				String id3 = mr.tf[0].getText();
-				sql.SQLDelete("member", id3, m_list.model);
-				pf.dispose();
-				
-				break;
 			case "Search Member":
 				String[] arr = sql.SQLRead("member", m_list.search.getText());
 				if(arr[0] == null) {
 					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
 				} else {
-					
-					pf = new promptFrame("Search Member", 700, 720);
-					pf.setVisible(true);
-					mr = new M_RUD(pf.getWidth(), pf.getHeight());
-					mr.edit.addActionListener(this);
-					mr.del.addActionListener(this);
-					pf.add(mr);
+					mr = new M_RUD(700, 720, arr);
+					mr.setVisible(true);
 					
 					for(int i = 0; i < mr.tf.length; i++) {
-						mr.tf[i].setText(arr[i]);
 						ctf.placeHolder(mr.tf[i], arr[i]);
 					}
-					
 					sql.GetData("booksissued", mr.modelInfo, mr.tf[1].getText(), "modelInfo");
 				}
 					
 				break;
-			case "Issue this Book":
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-				Date dt;
-				pf.dispose();
-				pf = new promptFrame("Book Rent", 600, 480);
-				pf.setVisible(true);
-				br = new BookRent(pf.getWidth(), pf.getHeight());
-				
-				String cnvrt_date;
-				try {
-					dt = formatter.parse(LocalDate.now().toString());
-					cnvrt_date = formatter.format(dt);
-					
-					br.tf[0].setText(brud.tf[0].getText());
-					br.tf[1].setText(brud.tf[2].getText());
-					br.tf[3].setText(cnvrt_date);
-					
-					ctf.placeHolder(br.tf[0], brud.tf[0].getText());
-					ctf.placeHolder(br.tf[1], brud.tf[1].getText());
-					ctf.placeHolder(br.tf[3], cnvrt_date);
-				} catch (ParseException e2) {}
-				
-				pf.add(br);
-				
-				br.issB.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						br.issB.setIcon(new ImageIcon("src\\assets\\red-openbook.png"));
-					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						br.issB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
-					}
-				});
-				br.issB.addActionListener(this);
-				
-				break;
-			case "Issue Book":
-				SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd"); 
-				Date date1, date2;
-				
-				if(sql.verifyMember(br.tf[2].getText())) {
-					int att = 0;
-					String id = ig.generator("booksissued");
-					for(int i = 0; i < br.tf.length; i++) {
-						if(br.tf[i].getText().equals("")) {
-							att++;
-						}
-					}
-					if(att==0) {
-						try {
-							date1 = formatter1.parse(br.tf[3].getText());
-							date2 = formatter1.parse(br.tf[4].getText());  
-							if(date1.after(date2)) {
-								JOptionPane.showMessageDialog(null, "Return Date must not be earlier than Issued Date", "Alert 204!", JOptionPane.ERROR_MESSAGE);
-								JOptionPane.showMessageDialog(null, "Date Format must be (yyyy-mm-dd)", "Reminder!", JOptionPane.INFORMATION_MESSAGE);
-							}else {
-								sql.SQLCreate("booksissued", id, br.tf[0].getText(), br.tf[1].getText(), br.tf[2].getText(), br.tf[3].getText(), br.tf[4].getText(), br.tf[5].getText(), "not returned", ib.model);
-								sql.setBookStatus("book", "unavailable", br.tf[0].getText(), bs.model);
-								pf.dispose();
-							}
-						} catch (ParseException e1) {
-							JOptionPane.showMessageDialog(null, "Input Valid Dates!", "Alert 404!", JOptionPane.ERROR_MESSAGE);
-						}  
-						att = 0;
-					}else {
-						JOptionPane.showMessageDialog(null, "Please fill out details!", "Alert!", JOptionPane.ERROR_MESSAGE);
-						att = 0;
-					}
+			case "Search Staff":
+				String[] arr4 = sql.SQLRead("employees", employee.search.getText());
+				if(arr4[0] == null) {
+					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(null, "Member Not Found!", "Error 204", JOptionPane.ERROR_MESSAGE);
+					erd = new E_RUD("Search Member", 700, 520, arr4);
+					erd.setVisible(true);
+					
+					for(int i = 0; i < erd.tf.length; i++) {
+						ctf.placeHolder(erd.tf[i], arr4[i]);
+					}
+					sql.GetData("employees", employee.model, "", "");
 				}
+					
 				break;
 			case "Search Book":
 				String[] arr2 = sql.SQLRead("book", bs.search.getText());
 				if(arr2[0] == null) {
 					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
 				} else {
-					pf = new promptFrame("Search Book", 600, 480);
-					pf.setVisible(true);
-					brud = new B_RUD(pf.getWidth(), pf.getHeight());
-					pf.add(brud);
-					brud.editB.addActionListener(this);
-					brud.issueB.addActionListener(this);
-					brud.delB.addActionListener(this);
+					brud = new B_RUD(600, 480, arr2);
+					brud.setVisible(true);
 					
-					brud.editB.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseEntered(MouseEvent e) {
-							brud.editB.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
-						}
-						@Override
-						public void mouseExited(MouseEvent e) {
-							brud.editB.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
-						}
-					});
-					brud.issueB.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseEntered(MouseEvent e) {
-							brud.issueB.setIcon(new ImageIcon("src\\assets\\red-openbook.png"));
-						}
-						@Override
-						public void mouseExited(MouseEvent e) {
-							brud.issueB.setIcon(new ImageIcon("src\\assets\\white-openbook.png"));
-						}
-					});
-					brud.delB.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseEntered(MouseEvent e) {
-							brud.delB.setIcon(new ImageIcon("src\\assets\\red-del.png"));
-						}
-						@Override
-						public void mouseExited(MouseEvent e) {
-							brud.delB.setIcon(new ImageIcon("src\\assets\\white-del.png"));
-						}
-					});
-				
 					for(int i = 0; i < brud.tf.length; i++) {
-						brud.tf[i].setText(arr2[i]);
 						ctf.placeHolder(brud.tf[i], arr2[i]);
 					}
-					if(brud.tf[6].getText().equals("unavailable")) {
-						brud.issueB.setVisible(false);
-					}
 				}
+				sql.GetData("book", bs.model, "", "");
 				break;
-				
 			case "Add New Member":
-				pf = new promptFrame("Create New Record", 550, 550);
-				pf.setVisible(true);
-				nmr = new NewMemberRecord(pf.getWidth(), pf.getHeight());
-				nmr.create.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						nmr.create.setIcon(new ImageIcon("src\\assets\\red-edit.png"));
-					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						nmr.create.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
-					}
-				});
-				nmr.gen.addActionListener(this);
-				nmr.create.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						sql.SQLCreate("member", nmr.tf[7].getText(), nmr.tf[0].getText(), nmr.tf[1].getText(), nmr.tf[3].getText(), nmr.tf[2].getText(), nmr.tf[4].getText(), nmr.tf[5].getText(), nmr.tf[6].getText(), m_list.model);
-						pf.dispose();
-					}
-				});
+				nmr = new NewMemberRecord(550, 550);
+				nmr.setVisible(true);
+				sql.GetData("member", m_list.model, "", "");
 				
-				pf.add(nmr);
+				break;
+			case "Add New Staff":
+				ns = new NewStaff(550, 550);
+				ns.setVisible(true);
+				sql.GetData("employees", employee.model, "", "");
+				
 				break;
 			case "Add New Book":
-				pf = new promptFrame("New Book", 600, 450);
-				pf.setVisible(true);
-				nbr = new NewBookRecord(pf.getWidth(), pf.getHeight());
-				nbr.adb.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						nbr.adb.setIcon(new ImageIcon("src\\assets\\red-book.png"));
-					}
-					@Override
-					public void mouseExited(MouseEvent e) {
-						nbr.adb.setIcon(new ImageIcon("src\\assets\\white-book.png"));
-					}
-				});
-				nbr.adb.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String id = ig.generator("book");
-						sql.SQLCreate("book", id, nbr.tf[0].getText(), nbr.tf[1].getText(), nbr.tf[2].getText(), nbr.tf[3].getText(), nbr.tf[4].getText(), nbr.tf[5].getText(), null, bs.model);
-						
-						pf.dispose();
-					}
-				});
+				nbr = new NewBookRecord(600, 450);
+				nbr.setVisible(true);
+				sql.GetData("book", bs.model, "", "");
 				
-				pf.add(nbr);
-				break;
-			case "GENERATE":
-				PasswordGenerator pg = new PasswordGenerator();
-				IDGenerator ig = new IDGenerator();
-				
-				pg.generator("member");
-				ig.generator("member");
-				String p = pg.GetPassword();
-				String id = ig.generator("member");
-				
-				nmr.tf[6].setText(p);
-				nmr.tf[7].setText(id);
-				break;
-			case "Edit Book":
-				String id4 = brud.tf[0].getText();
-				String[] temp2 = new String[6];
-				for(int i = 0; i < temp2.length; i++) {
-					temp2[i] = brud.tf[i+1].getText();
-				}
-				sql.SQLUpdate("book", id4, temp2, bs.model);
-				
-				break;
-			case "Delete Book":
-				String id5 = brud.tf[0].getText();
-				sql.SQLDelete("book", id5, bs.model);
-				pf.dispose();
 				break;
 			case "Search Issued Book":
 				String[] arr3 = sql.SQLRead("booksissued", ib.search.getText());
 				if(arr3[0] == null) {
 					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
 				} else {
-					pf = new promptFrame("Issued Book", 600, 520);
-					pf.setVisible(true);
-					vib = new ViewIssuedBook(pf.getWidth(), pf.getHeight());
-					if(arr3[7].equals("returned")) {
-						vib.returnB.setVisible(false);
-						for(JTextField tf: vib.tf) {
-							tf.setFocusable(false);
-						}
-					}
-					vib.returnB.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseEntered(MouseEvent e) {
-							vib.returnB.setIcon(new ImageIcon("src\\assets\\red-book.png"));
-						}
-						@Override
-						public void mouseExited(MouseEvent e) {
-							vib.returnB.setIcon(new ImageIcon("src\\assets\\white-book.png"));
-						}
-					});
-					vib.returnB.addActionListener(this);
-					pf.add(vib);
+					vib = new ViewIssuedBook(600, 550, arr3);
+					vib.setVisible(true);
+					sql.GetData("booksissued", ib.model, "", "");
 					
-					for(int i = 0; i < vib.tf.length; i++) {
-						vib.tf[i].setText(arr3[i]);
-						ctf.placeHolder(vib.tf[i], arr3[i]);
-					}
 				}
 				
 				break;
-			case "Return Book":
-				sql.setBookStatus("booksissued", "returned", vib.tf[0].getText(), ib.model);
-				sql.setBookStatus("book", "available", vib.tf[1].getText(), bs.model);
-				JOptionPane.showMessageDialog(null, "Book Successfully Returned", "Returned", JOptionPane.INFORMATION_MESSAGE);
-				pf.dispose();
-				break;
 			case "SEARCH":
-				pf = new promptFrame("Search Book", 600,  370);
-				pf.setVisible(true);
-				bki= new BookInfo(pf.getWidth(), pf.getHeight());
-				pf.add(bki);
+				String[] arr5 = sql.SQLRead("book", md.searchQry.getText());
+				if(arr5[0] == null) {
+					JOptionPane.showMessageDialog(null, "No Result Found!", "Error 404", JOptionPane.ERROR_MESSAGE);
+				} else {
+					bki= new BookInfo(600, 370, arr5);
+					bki.setVisible(true);
+					sql.GetData("book", md.model, "", "");
+					
+				}
 				break;
 			case "Edit Staff":
 				String id6 = up.tf[0].getText();
@@ -497,6 +329,7 @@ public class Controller extends MyClass{
 			case "Delete Staff":
 				String id7 = up.tf[0].getText();
 				sql.SQLDelete("employees", id7, m_list.model);
+				
 				break;
 		}
 	}
@@ -514,26 +347,36 @@ public class Controller extends MyClass{
 		} else if (e.getSource() ==  tb.name) {
 			mp.setTitle("Library Management - User Profile");
 			sb.Default(sb.issued, "book");
-			sb.Default(sb.member, "members");
+			sb.Default(sb.member, "member");
+			sb.Default(sb.empl, "employee");
 			sb.Default(sb.books, "shelf");
 			sb.Default(sb.dash, "dash");
 			up.setVisible(true);
 			ib.setVisible(false);
 			md.setVisible(false);
+			employee.setVisible(false);
 			dashB.setVisible(false);
 			m_list.setVisible(false);
 			bs.setVisible(false);
 			
 			up.modify.addActionListener(this);
+			up.modify2.addActionListener(this);
 			up.delS.addActionListener(this);
 			
 			String[] arr;
-			if(lp.admin) {
+			if(tb.name.getText().equals("ADMIN")) {
 				up.setBounds(150, 70, 1120, 630, 20);
 				up.scrollTable.setVisible(false);
-				arr = (tb.name.getText().equals("STAFF") || tb.name.getText().equals("ADMIN")) ? sql.SQLRead("employees",globeID) : null;
+				up.delS.setVisible(false);
+				arr = sql.SQLRead("employees",globeID);
 				
-			} else {
+			}else if(tb.name.getText().equals("STAFF")) {
+				up.setBounds(150, 70, 1120, 630, 20);
+				up.scrollTable.setVisible(false);
+				up.delS.setVisible(true);
+				arr = sql.SQLRead("employees",globeID);
+				
+			}else {
 				up.setBounds(10, 70, 1260, 630, 20);
 				up.scrollTable.setVisible(true);
 				arr = sql.SQLRead("member",globeID);
@@ -550,6 +393,7 @@ public class Controller extends MyClass{
 	
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		Font font;
@@ -581,6 +425,7 @@ public class Controller extends MyClass{
 		}
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void mouseExited(MouseEvent e) {
 		Font font;
@@ -630,19 +475,18 @@ public class Controller extends MyClass{
 			dashB.setContent(i, "");
 		}
 		sb.active(sb.dash, "dash");
-		sb.Default(sb.member, "members");
+		sb.Default(sb.member, "member");
+		sb.Default(sb.empl, "employee");
 		sb.Default(sb.books, "shelf");
 		sb.Default(sb.issued, "book");
 	}
 	
 	public void DashCont() {
-
 		dashB.setContent(0, String.valueOf(dr.GetTotalBooks()));
 		dashB.setContent(1, String.valueOf(dr.GetTotalIssued()));
 		dashB.setContent(2, String.valueOf(dr.GetTotalAvailable()));
 		dashB.setContent(3, String.valueOf(dr.GetLateBooks()));
 		dashB.setContent(4, String.valueOf(dr.GetTotalStudent()));
 		dashB.setContent(5, String.valueOf(dr.GetTotalTeachers()));
-		
 	}
 }

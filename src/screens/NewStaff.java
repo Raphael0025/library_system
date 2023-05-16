@@ -1,36 +1,28 @@
 package screens;
 import javax.swing.*;
-
-import api_service.IDGenerator;
-import api_service.PasswordGenerator;
-import api_service.SQLapi;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
+import java.awt.event.*;
 import custom.*;
+import api_service.*;
 
 @SuppressWarnings("serial")
-public class NewMemberRecord extends JDialog implements ActionListener, MouseListener{
+public class NewStaff extends JDialog implements ActionListener, MouseListener{
 	static String name = "CREATE NEW RECORD";
 	public JLabel header = new JLabel(name);
 	public JButton create = new RoundedButton("CREATE");
-	public JButton gen = new RoundedButton("GENERATE");
+	public JButton gen = new RoundedButton("Generate");
 	JLabel[] labels = new JLabel[8];
 	public JTextField[] tf = new JTextField[8];
-	String[] txt = {"Name", "Member Type", "Address", "Age", "Contact No.", "Email Address", "Password","Member ID"};
+	String[] txt = {"Name", "Role", "Address", "Age", "Contact No.", "Email Address", "Password","Staff ID"};
 	JPanel pan = new JPanel();
 	SQLapi sql = new SQLapi();
-	memberList m_list = new memberList();
+	EmployeeList employee = new EmployeeList();
 	
-	public NewMemberRecord(int w, int h) {
+	public NewStaff(int w, int h) {
 		init(w, h);
 	}
 	
-	public void init(int w, int h) {
+	public void init( int w, int h) {
 		this.setTitle(name);
 		this.setSize(w, h);
 		this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -93,7 +85,6 @@ public class NewMemberRecord extends JDialog implements ActionListener, MouseLis
 		pan.add(header);
 		pan.add(create);
 		pan.add(gen);
-		
 		this.add(pan);
 	}
 	
@@ -102,6 +93,28 @@ public class NewMemberRecord extends JDialog implements ActionListener, MouseLis
 		((RoundedButton)var).setBorder(219, 105, 108, 255,255,255);
 		((RoundedButton)var).setFore(255, 255, 255, 255, 0, 0);
 		var.setIcon(new ImageIcon("src\\assets\\white-"+img+".png"));
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton press = ( JButton ) e.getSource();
+		String btn = press.getText(), id, pass;
+		
+		if(btn.equals("Generate")) {
+			PasswordGenerator pg2 = new PasswordGenerator();
+			IDGenerator idg = new IDGenerator();
+			
+			pg2.generator("employees");
+			pass = pg2.GetPassword();
+			id = idg.generator("employees");
+			
+			tf[6].setText(pass);
+			tf[7].setText(id);
+		} else if (btn.equals("CREATE")) {
+			sql.SQLCreate("employees", tf[7].getText(), tf[0].getText(), tf[1].getText(), tf[3].getText(), tf[2].getText(), tf[4].getText(), tf[5].getText(), tf[6].getText(), employee.model);
+			
+			setVisible(false);
+		}
 	}
 
 	@Override
@@ -117,28 +130,5 @@ public class NewMemberRecord extends JDialog implements ActionListener, MouseLis
 	@Override
 	public void mouseExited(MouseEvent e) {
 		create.setIcon(new ImageIcon("src\\assets\\white-edit.png"));
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		JButton press = ( JButton ) e.getSource();
-		String btn = press.getText(), id, pass;
-		
-
-		if(btn.equals("GENERATE")) {
-			PasswordGenerator pg2 = new PasswordGenerator();
-			IDGenerator idg = new IDGenerator();
-			
-			pg2.generator("member");
-			pass = pg2.GetPassword();
-			id = idg.generator("member");
-			
-			tf[6].setText(pass);
-			tf[7].setText(id);
-		} else if (btn.equals("CREATE")) {
-			sql.SQLCreate("member", tf[7].getText(), tf[0].getText(), tf[1].getText(), tf[3].getText(), tf[2].getText(), tf[4].getText(), tf[5].getText(), tf[6].getText(), m_list.model);
-			this.dispose();
-			m_list.update();
-		}
 	}
 }

@@ -1,8 +1,14 @@
 package screens;
 import javax.swing.*; 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import custom.*;
+
 import javax.swing.table.*;
+
+import api_service.SQLapi;
 
 @SuppressWarnings("serial")
 public class memberList extends AguaComponents{
@@ -22,6 +28,9 @@ public class memberList extends AguaComponents{
         }
     };
     public JScrollPane scrollTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+    Timer time;
+    SQLapi api = new SQLapi();
+    int row;
     
 	public memberList() {
 		init();
@@ -75,5 +84,9 @@ public class memberList extends AguaComponents{
 		this.add(query);
 		this.add(search);
 		this.add(title);
+	}
+	
+	public void update() {
+		api.GetData("member", model, "", "");  
 	}
 }
